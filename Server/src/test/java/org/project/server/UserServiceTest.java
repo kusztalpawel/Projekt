@@ -36,6 +36,10 @@ class UserServiceTest {
         assertEquals("username", saved.getUsername());
         assertEquals(1, saved.getLevel());
         assertEquals(0, saved.getExperience());
+        assertNotNull(saved.getAchievements());
+        assertTrue(saved.getAchievements().isEmpty());
+        assertNotNull(saved.getFriends());
+        assertTrue(saved.getFriends().isEmpty());
 
         System.out.println("Test user saved with id: " + saved.getId());
 

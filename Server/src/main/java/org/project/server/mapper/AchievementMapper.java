@@ -4,6 +4,8 @@ import org.project.server.dto.AchievementDTO;
 import org.project.server.model.Achievement;
 
 public class AchievementMapper {
+    private AchievementMapper() {}
+
     public static AchievementDTO toDTO(Achievement a) {
         AchievementDTO dto = new AchievementDTO();
         dto.setId(a.getId());

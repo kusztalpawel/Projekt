@@ -1,4 +1,4 @@
-package org.project.server.controller;
+package org.project.server.dto;
 
 public class UserProgressDTO {
     private Integer level;

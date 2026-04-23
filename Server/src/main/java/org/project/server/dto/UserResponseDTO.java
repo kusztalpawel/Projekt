@@ -3,20 +3,11 @@ package org.project.server.dto;
 import java.util.List;
 
 public class UserResponseDTO {
-    private Long id;
     private String username;
     private Integer level;
     private Integer experience;
     private List<AchievementDTO> achievements;
     private List<Long> friendIds;
-
-    public Long getId() {
-        return id;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
-    }
 
     public String getUsername() {
         return username;

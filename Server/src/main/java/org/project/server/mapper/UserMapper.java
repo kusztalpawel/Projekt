@@ -5,6 +5,7 @@ import org.project.server.dto.UserResponseDTO;
 import org.project.server.model.User;
 
 public class UserMapper {
+    private UserMapper() {}
 
     public static User toEntity(UserRegisterDTO dto) {
         User user = new User();
@@ -18,7 +19,6 @@ public class UserMapper {
     public static UserResponseDTO toDTO(User user) {
 
         UserResponseDTO dto = new UserResponseDTO();
-        dto.setId(user.getId());
         dto.setUsername(user.getUsername());
         dto.setLevel(user.getLevel());
         dto.setExperience(user.getExperience());

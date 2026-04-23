@@ -1,8 +1,7 @@
 package org.project.server.controller;
 
-import org.project.server.dto.UserLoginDTO;
-import org.project.server.dto.UserRegisterDTO;
-import org.project.server.dto.UserResponseDTO;
+import org.project.server.JwtUtil;
+import org.project.server.dto.*;
 import org.project.server.mapper.UserMapper;
 import org.project.server.model.User;
 import org.project.server.service.UserService;
@@ -15,9 +14,11 @@ import org.springframework.web.bind.annotation.*;
 public class UserController {
 
     private final UserService userService;
+    private final JwtUtil jwtUtil;
 
-    public UserController(UserService userService) {
+    public UserController(UserService userService,  JwtUtil jwtUtil) {
         this.userService = userService;
+        this.jwtUtil = jwtUtil;
     }
 
     @PostMapping("/register")
@@ -28,9 +29,11 @@ public class UserController {
     }
 
     @PostMapping("/login")
-    public ResponseEntity<UserResponseDTO> login(@RequestBody UserLoginDTO dto) {
+    public ResponseEntity<AuthResponseDTO> login(@RequestBody UserLoginDTO dto) {
         User user = userService.login(dto);
-        return ResponseEntity.ok(UserMapper.toDTO(user));
+        String token = jwtUtil.generateToken(user.getUsername());
+
+        return ResponseEntity.ok(new AuthResponseDTO(token));
     }
 
     @GetMapping("/{id}")

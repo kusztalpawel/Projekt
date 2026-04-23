@@ -2,6 +2,7 @@ package org.project.server.model;
 
 import jakarta.persistence.*;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Entity
@@ -24,11 +25,11 @@ public class User {
 
     @ManyToMany
     @JoinTable(name = "user_achievements", joinColumns = @JoinColumn(name = "user_id"), inverseJoinColumns = @JoinColumn(name = "achievement_id"))
-    private List<Achievement> achievements;
+    private List<Achievement> achievements =  new ArrayList<>();
 
     @ManyToMany
     @JoinTable(name = "user_friends", joinColumns = @JoinColumn(name = "user_id"), inverseJoinColumns = @JoinColumn(name = "friend_id"))
-    private List<User> friends;
+    private List<User> friends = new ArrayList<>();
 
     public Long getId() {
         return id;

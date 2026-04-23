@@ -1,6 +1,6 @@
 package org.project.server.service;
 
-import org.project.server.controller.UserProgressDTO;
+import org.project.server.dto.UserProgressDTO;
 import org.project.server.dto.UserLoginDTO;
 import org.project.server.dto.UserRegisterDTO;
 import org.project.server.mapper.UserMapper;
@@ -8,6 +8,8 @@ import org.project.server.model.Achievement;
 import org.project.server.model.User;
 import org.project.server.repository.AchievementRepository;
 import org.project.server.repository.UserRepository;
+import org.springframework.security.authentication.BadCredentialsException;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -15,10 +17,12 @@ public class UserService {
 
     private final UserRepository userRepository;
     private final AchievementRepository achievementRepository;
+    private final PasswordEncoder passwordEncoder;
 
-    public UserService(UserRepository userRepository, AchievementRepository achievementRepository) {
+    public UserService(UserRepository userRepository, AchievementRepository achievementRepository, PasswordEncoder passwordEncoder) {
         this.userRepository = userRepository;
         this.achievementRepository = achievementRepository;
+        this.passwordEncoder = passwordEncoder;
     }
 
     public User register(UserRegisterDTO dto) {
@@ -27,6 +31,7 @@ public class UserService {
         }
 
         User user = UserMapper.toEntity(dto);
+        user.setPassword(passwordEncoder.encode(user.getPassword()));
         return userRepository.save(user);
     }
 
@@ -34,8 +39,8 @@ public class UserService {
         User user = userRepository.findByUsername(dto.getUsername())
                 .orElseThrow(() -> new RuntimeException("User not found"));
 
-        if (!user.getPassword().equals(dto.getPassword())) {
-            throw new RuntimeException("Invalid password");
+        if (!passwordEncoder.matches(dto.getPassword(), user.getPassword())) {
+            throw new BadCredentialsException("Invalid credentials");
         }
 
         return user;

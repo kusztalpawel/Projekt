@@ -6,6 +6,8 @@ import org.project.server.dto.ExamResponseDTO;
 import org.project.server.model.Exam;
 
 public class ExamMapper {
+    private ExamMapper() {}
+
 
     public static Exam toEntity(ExamRequestDTO dto) {
         Exam exam = new Exam();

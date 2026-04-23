@@ -1,0 +1,95 @@
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+    font-family: Arial, sans-serif;
+}
+
+.container {
+    height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background: #f3f4f6;
+}
+
+.card {
+    display: flex;
+    width: 900px;
+    height: 500px;
+    border-radius: 16px;
+    overflow: hidden;
+    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+}
+
+.left {
+    flex: 1;
+    background: linear-gradient(135deg, #4f46e5, #6366f1);
+    color: white;
+    padding: 40px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+}
+
+.left h1 {
+    font-size: 32px;
+    margin-bottom: 20px;
+}
+
+.left p {
+    opacity: 0.9;
+    line-height: 1.5;
+}
+
+.right {
+    flex: 1;
+    background: white;
+    padding: 40px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+}
+
+.right h2 {
+    margin-bottom: 10px;
+}
+
+.subtitle {
+    margin-bottom: 20px;
+    color: #6b7280;
+    font-size: 14px;
+}
+
+.right input[type="text"],
+.right input[type="password"] {
+    width: 100%;
+    padding: 12px;
+    margin-bottom: 15px;
+    border: 1px solid #d1d5db;
+    border-radius: 8px;
+    outline: none;
+}
+
+.options {
+    display: flex;
+    justify-content: space-between;
+    font-size: 13px;
+    margin-bottom: 15px;
+}
+
+.right button {
+    width: 100%;
+    padding: 12px;
+    border: none;
+    border-radius: 8px;
+    background: #4f46e5;
+    color: white;
+    cursor: pointer;
+    margin-bottom: 15px;
+}
+
+.signup {
+    text-align: center;
+    font-size: 14px;
+}
