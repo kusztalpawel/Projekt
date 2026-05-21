@@ -33,7 +33,7 @@ public class UserController {
         User user = userService.login(dto);
         String token = jwtUtil.generateToken(user.getUsername());
 
-        return ResponseEntity.ok(new AuthResponseDTO(token));
+        return ResponseEntity.ok(new AuthResponseDTO(token, user.getUsername()));
     }
 
     @GetMapping("/{id}")

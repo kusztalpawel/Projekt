@@ -21,8 +21,8 @@ public class Task {
     private Integer points;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "user_id", nullable = false)
-    private User user;
+    @JoinColumn(name = "course_id", nullable = false)
+    private Course course;
 
     public Long getId() {
         return id;
@@ -56,11 +56,11 @@ public class Task {
         this.points = points;
     }
 
-    public User getUser() {
-        return user;
+    public Course getCourse() {
+        return course;
     }
 
-    public void setUser(User user) {
-        this.user = user;
+    public void setCourse(Course course) {
+        this.course = course;
     }
 }

@@ -7,10 +7,10 @@ import org.project.server.model.Task;
 import org.project.server.service.TaskService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
-import java.util.Optional;
 
 @RestController
 @RequestMapping("/tasks")
@@ -23,11 +23,11 @@ public class TaskController {
     }
 
     @PostMapping
-    public ResponseEntity<TaskResponseDTO> create(@RequestBody TaskRequestDTO dto) {
+    public ResponseEntity<TaskResponseDTO> create(@RequestBody TaskRequestDTO dto, Authentication authentication) {
 
-        Long userId = 1L; // docelowo z JWT / security context
+        String username = authentication.getName();
 
-        Task task = taskService.createTask(dto, userId);
+        Task task = taskService.createTask(dto, username);
 
         return ResponseEntity
                 .status(HttpStatus.CREATED)
@@ -44,6 +44,13 @@ public class TaskController {
         );
     }
 
+    @GetMapping("/course/{courseId}")
+    public ResponseEntity<List<TaskResponseDTO>> getByCourseId(@PathVariable Long courseId, Authentication authentication) {
+        String name = authentication.getName();
+
+        return ResponseEntity.ok(taskService.getUserTasksByCourseId(courseId, name).stream().map(TaskMapper::toDTO).toList());
+    }
+
     @GetMapping("/{id}")
     public ResponseEntity<TaskResponseDTO> getById(@PathVariable Long id) {
         return ResponseEntity.ok(
@@ -51,18 +58,20 @@ public class TaskController {
         );
     }
 
-    @PutMapping("/{id}")
+    /*@PutMapping("/{id}")
     public ResponseEntity<TaskResponseDTO> update(@PathVariable Long id,
                                                   @RequestBody TaskRequestDTO dto) {
 
         Task updated = taskService.updateTask(id, dto);
 
         return ResponseEntity.ok(TaskMapper.toDTO(updated));
-    }
+    }*/
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<Void> delete(@PathVariable Long id) {
-        taskService.deleteTask(id);
+    public ResponseEntity<Void> delete(@PathVariable Long id, Authentication authentication) {
+        String username = authentication.getName();
+
+        taskService.deleteTask(id, username);
         return ResponseEntity.noContent().build();
     }
 }

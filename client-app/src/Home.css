@@ -22,14 +22,14 @@ header {
 
 .nav {
     display: flex;
-    gap: 16px;
+    gap: 25px;
     align-items: center;
+    color: #ffffff;
 }
 
 .nav a {
     text-decoration: none;
     font-size: 14px;
-    color: #ffffff;
 }
 
 .nav a:hover {
@@ -51,14 +51,148 @@ h1 {
     color: #111;
 }
 
-.logout {
+.header-link {
     background-color: #4f46e5;
     border: none;
-    font-size: 14px;
+    font-size: 15px;
     color: #ffffff;
 }
 
-.logout:hover {
+.header-link:hover {
     text-decoration: underline;
     cursor: pointer;
+}
+
+.tasks-container {
+    max-width: 600px;
+    min-height: 500px;
+    margin: 40px auto;
+    padding: 10px 15px 0px 15px;
+    border: 1px solid;
+}
+
+.task-input {
+    display: flex;
+    gap: 10px;
+    margin-bottom: 20px;
+}
+
+.task-input input {
+    flex: 1;
+    padding: 10px;
+    font-size: 16px;
+}
+
+.task-input button {
+    padding: 10px 20px;
+    cursor: pointer;
+}
+
+.task-list {
+    list-style: none;
+    padding: 0;
+    max-height: 400px;
+    overflow: auto;
+}
+
+.task {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background: #f3f3f3;
+    padding: 12px;
+    margin-bottom: 10px;
+    border-radius: 8px;
+}
+
+.task-left {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    cursor: pointer;
+}
+
+.task.done span {
+    text-decoration: line-through;
+    opacity: 0.6;
+}
+
+.delete-btn {
+    background: red;
+    color: white;
+    border: none;
+    padding: 5px 10px;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+.courses-dropdown {
+    position: relative;
+}
+
+.courses-btn {
+    padding: 8px 14px;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+}
+
+.courses-menu {
+    position: absolute;
+    top: 35px;
+    left: 0;
+    background: white;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    min-width: 180px;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+    overflow: hidden;
+    z-index: 100;
+}
+
+.courses-menu button{
+    display: block;
+    text-align: left;
+    padding: 10px;
+    min-width: 180px;
+    text-decoration: none;
+    color: black;
+    background-color: white;
+    border: 0px;
+}
+
+.courses-menu button:hover {
+    background: #f3f3f3;
+    cursor: pointer;
+}
+
+.modal-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(0, 0, 0, 0.5);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    z-index: 999;
+}
+
+.modal {
+    background: white;
+    padding: 24px;
+    border-radius: 12px;
+    min-width: 300px;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    z-index: 1000;
+}
+
+.modal-buttons {
+    display: flex;
+    gap: 10px;
+    justify-content: flex-end;
 }

@@ -1,12 +1,10 @@
 package org.project.server.dto;
 
-import java.time.LocalDate;
-
 public class TaskRequestDTO {
 
     private String name;
-    private LocalDate time;
     private Integer points;
+    private Long courseId;
 
     public String getName() {
         return name;
@@ -16,19 +14,19 @@ public class TaskRequestDTO {
         this.name = name;
     }
 
-    public LocalDate getTime() {
-        return time;
-    }
-
-    public void setTime(LocalDate time) {
-        this.time = time;
-    }
-
     public Integer getPoints() {
         return points;
     }
 
     public void setPoints(Integer points) {
         this.points = points;
+    }
+
+    public Long getCourseId() {
+        return courseId;
+    }
+
+    public void setCourseId(Long courseId) {
+        this.courseId = courseId;
     }
 }

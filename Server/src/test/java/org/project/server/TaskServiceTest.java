@@ -33,10 +33,10 @@ class TaskServiceTest {
             dto.setPoints(10);
             dto.setTime(LocalDate.now());
 
-            created = taskService.createTask(dto, 1L);
+            created = taskService.createTask(dto, "user");
 
             assertNotNull(created.getId());
-            assertEquals(1L, created.getUser().getId());
+            assertEquals(1L, created.getCourse().getUser().getId());
         }
         finally {
             if (created != null && created.getId() != null) {

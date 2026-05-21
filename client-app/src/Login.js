@@ -22,6 +22,10 @@ const Login = ({ setUser }) => {
 
             const data = await res.json();
 
+            if(!res.ok){
+                throw new Error(data.message || "Login failed");
+            }
+
             const userData = {
                 username: data.username,
                 token: data.token,
@@ -36,7 +40,7 @@ const Login = ({ setUser }) => {
                 throw new Error(data.message || "Login failed");
             }
 
-            console.log("Logged in user:", data);
+            console.log("Logged user:", data);
         } catch (err) {
             console.error("Login error:", err);
         }

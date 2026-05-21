@@ -8,7 +8,6 @@ public class TaskResponseDTO {
     private String name;
     private LocalDate time;
     private Integer points;
-    private Long userId;
 
     public Long getId() {
         return id;
@@ -39,13 +38,5 @@ public class TaskResponseDTO {
 
     public void setPoints(Integer points) {
         this.points = points;
-    }
-
-    public Long getUserId() {
-        return userId;
-    }
-
-    public void setUserId(Long id) {
-        this.userId = id;
     }
 }

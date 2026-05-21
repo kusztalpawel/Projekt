@@ -7,8 +7,11 @@ import { useState, useEffect } from "react";
 
 function App() {
 
-  const [user, setUser] = useState(null);
-
+  const [user, setUser] = useState(() => {
+      const saved = localStorage.getItem("user");
+      return saved ? JSON.parse(saved) : null;
+  });
+  
   useEffect(() => {
     const storedUser = localStorage.getItem("user");
 

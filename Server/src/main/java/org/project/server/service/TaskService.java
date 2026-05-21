@@ -2,34 +2,40 @@ package org.project.server.service;
 
 import org.project.server.dto.TaskRequestDTO;
 import org.project.server.mapper.TaskMapper;
+import org.project.server.model.Course;
 import org.project.server.model.Task;
-import org.project.server.model.User;
+import org.project.server.repository.CourseRepository;
 import org.project.server.repository.TaskRepository;
-import org.project.server.repository.UserRepository;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
+import org.springframework.web.server.ResponseStatusException;
 
+import java.time.LocalDate;
 import java.util.List;
 
 @Service
 public class TaskService {
 
     private final TaskRepository taskRepository;
-    private final UserRepository userRepository;
+    private final CourseRepository courseRepository;
 
-    public TaskService(TaskRepository taskRepository,
-                       UserRepository userRepository) {
+    public TaskService(TaskRepository taskRepository, CourseRepository courseRepository) {
         this.taskRepository = taskRepository;
-        this.userRepository = userRepository;
+        this.courseRepository = courseRepository;
     }
 
-    public Task createTask(TaskRequestDTO dto, Long userId) {
+    public Task createTask(TaskRequestDTO dto, String username) {
 
         Task task = TaskMapper.toEntity(dto);
 
-        User user = userRepository.findById(userId)
-                .orElseThrow(() -> new RuntimeException("User not found"));
+        Course course = courseRepository.findById(dto.getCourseId()).orElseThrow();
 
-        task.setUser(user);
+        if (!course.getUser().getUsername().equals(username)) {
+            throw new ResponseStatusException(HttpStatus.FORBIDDEN);
+        }
+
+        task.setTime(LocalDate.now());
+        task.setCourse(course);
 
         return taskRepository.save(task);
     }
@@ -43,21 +49,34 @@ public class TaskService {
                 .orElseThrow(() -> new RuntimeException("Task not found"));
     }
 
+    public List<Task> getUserTasksByCourseId(Long id, String name) {
+        Course course = courseRepository.findById(id).orElseThrow(() -> new RuntimeException("Course not found"));
+
+        if (!course.getUser().getUsername().equals(name)) {
+            throw new ResponseStatusException(HttpStatus.FORBIDDEN);
+        }
+
+        return taskRepository.findByCourseId(id);
+    }
+
     public Task updateTask(Long id, TaskRequestDTO dto) {
 
         Task task = getById(id);
 
         task.setName(dto.getName());
-        task.setTime(dto.getTime());
+        task.setTime(LocalDate.now());
         task.setPoints(dto.getPoints());
 
         return taskRepository.save(task);
     }
 
-    public void deleteTask(Long id) {
-        if (!taskRepository.existsById(id)) {
-            throw new RuntimeException("Task not found");
+    public void deleteTask(Long id, String username) {
+        Task task = taskRepository.findById(id).orElseThrow(() -> new RuntimeException("Task not found"));
+
+        if(!task.getCourse().getUser().getUsername().equals(username)) {
+            throw new ResponseStatusException(HttpStatus.FORBIDDEN);
         }
+
         taskRepository.deleteById(id);
     }
 }
