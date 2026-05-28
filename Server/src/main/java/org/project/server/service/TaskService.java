@@ -36,6 +36,7 @@ public class TaskService {
 
         task.setTime(LocalDate.now());
         task.setCourse(course);
+        task.setDone(false);
 
         return taskRepository.save(task);
     }
@@ -59,13 +60,30 @@ public class TaskService {
         return taskRepository.findByCourseId(id);
     }
 
-    public Task updateTask(Long id, TaskRequestDTO dto) {
+    public Task updateTask(Long id, TaskRequestDTO dto, String username) {
+        Task task = taskRepository.findById(id).orElseThrow(() -> new RuntimeException("Task not found"));
 
-        Task task = getById(id);
+        if(!task.getCourse().getUser().getUsername().equals(username)) {
+            throw new ResponseStatusException(HttpStatus.FORBIDDEN);
+        }
 
         task.setName(dto.getName());
         task.setTime(LocalDate.now());
         task.setPoints(dto.getPoints());
+
+        return taskRepository.save(task);
+    }
+
+    public Task setTaskDone(Long id, String username) {
+
+        Task task = taskRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Task not found"));
+
+        if(!task.getCourse().getUser().getUsername().equals(username)) {
+            throw new ResponseStatusException(HttpStatus.FORBIDDEN);
+        }
+
+        task.setDone(!task.getDone());
 
         return taskRepository.save(task);
     }

@@ -14,8 +14,8 @@ export default function Home({ user, setUser }) {
     const [showCourseModal, setShowCourseModal] = useState(false);
     const [newCourseName, setNewCourseName] = useState("");
 
-    const { courses, addCourse } = useCourses(user?.token);
-    const { tasks, addTask, toggleTask, deleteTask } = useTasks(user?.token, selectedCourse);
+    const { courses, setCourses, addCourse } = useCourses(user?.token);
+    const { tasks, addTask, toggleTask, deleteTask } = useTasks(user?.token, selectedCourse, setSelectedCourse);
 
     const handleLogout = () => {
         setUser(null);
@@ -35,7 +35,7 @@ export default function Home({ user, setUser }) {
     };
 
     const handleToggleTask = (id) => {
-        toggleTask(id);
+        toggleTask(user?.token, id);
     };
 
     const handleDeleteTask = (id) => {
@@ -53,6 +53,11 @@ export default function Home({ user, setUser }) {
             console.error(err);
         }
     };
+
+    const onCourseChosen = (crs) => {
+        setSelectedCourse(crs);
+        setShowCourses(false);
+    }
 
     return (<>
         <div className="page">
@@ -77,7 +82,7 @@ export default function Home({ user, setUser }) {
                                         {courses.map((c) => (
                                             <button
                                                 key={c.id}
-                                                onClick={() => {setSelectedCourse(c); setShowCourses(false)}}
+                                                onClick={() => {onCourseChosen(c)}}
                                             >
                                                 {c.name}
                                             </button>
@@ -88,6 +93,11 @@ export default function Home({ user, setUser }) {
                                     </div>
                                 )}
                             </div>
+
+
+                            <span className="user">
+                                Jestes w {selectedCourse?.name} | LVL {selectedCourse?.level ?? 0} | EXP {selectedCourse?.experience ?? 0} |
+                            </span>
 
                             <span className="user">
                                 Witaj, {username}
@@ -133,11 +143,17 @@ export default function Home({ user, setUser }) {
                             {tasks.map((task) => (
                                 <li key={task.id} className="task">
                                     <div className="task-left">
+                                        <input
+                                            type="checkbox"
+                                            className="task-checkbox"
+                                            checked={task.done}
+                                            onChange={() => handleToggleTask(task.id)}
+                                        />
                                         <span className="task-name">
                                             {task.name}
                                         </span>
                                         <span className="task-points">
-                                            {task.points} pkt
+                                            {task.points} EXP
                                         </span>
                                     </div>
 

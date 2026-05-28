@@ -1,5 +1,6 @@
 package org.project.server.service;
 
+import org.project.server.dto.CourseProgressDTO;
 import org.project.server.dto.CourseRequestDTO;
 import org.project.server.mapper.CourseMapper;
 import org.project.server.model.Course;
@@ -29,6 +30,8 @@ public class CourseService {
         User user = userRepository.findByUsername(username).orElseThrow(() -> new RuntimeException("Course not found"));
 
         course.setUser(user);
+        course.setLevel(1);
+        course.setExperience(0);
 
         return courseRepository.save(course);
     }
@@ -53,7 +56,7 @@ public class CourseService {
 
         Course course = getById(id);
 
-        course.setName(dto.getName());
+        course.setName(dto.name());
 
         return courseRepository.save(course);
     }
@@ -63,5 +66,30 @@ public class CourseService {
             throw new RuntimeException("Course not found");
         }
         courseRepository.deleteById(id);
+    }
+
+    public Course updateProgress(Long courseId, CourseProgressDTO dto) {
+        Course course = getById(courseId);
+
+        course.setLevel(dto.getLevel());
+        course.setExperience(dto.getExperience());
+
+        return courseRepository.save(course);
+    }
+
+    public CourseProgressDTO addExperience(Course course, int points) {
+        CourseProgressDTO dto = new CourseProgressDTO();
+        dto.setLevel(course.getLevel());
+        dto.setExperience(course.getExperience() + points);
+
+        return dto;
+    }
+
+    public CourseProgressDTO removeExperience(Course course, int points) {
+        CourseProgressDTO dto = new CourseProgressDTO();
+        dto.setLevel(course.getLevel());
+        dto.setExperience(Math.max(0, course.getExperience() - points));
+
+        return dto;
     }
 }

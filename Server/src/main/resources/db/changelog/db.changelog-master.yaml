@@ -9,3 +9,9 @@ databaseChangeLog:
       file: db/changelog/changes/004-create_course_table.sql
   - include:
       file: db/changelog/changes/005-alter_course_id_column.sql
+  - include:
+      file: db/changelog/changes/006-alter_tasks_table.sql
+  - include:
+      file: db/changelog/changes/007-alter_courses_table.sql
+  - include:
+      file: db/changelog/changes/008-alter_users_table.sql

@@ -37,6 +37,24 @@ export const createTask = async (token, courseId, task) => {
     return await res.json();
 };
 
+export const toggleTaskApi = async (token, taskId) => {
+    const res = await fetch(
+        `${API_URL}/tasks/${taskId}`,
+        {
+            method: "PATCH",
+            headers: {
+                Authorization: `Bearer ${token}`,
+            },
+        }
+    );
+
+    if(!res.ok){
+        throw new Error("Failed to update task");
+    }
+
+    return await res.json();
+}
+
 export const deleteTaskApi = async (token, taskId) => {
     const res = await fetch(
         `${API_URL}/tasks/${taskId}`,

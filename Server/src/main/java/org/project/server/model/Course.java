@@ -16,6 +16,9 @@ public class Course {
     @JoinColumn(name = "user_id")
     private User user;
 
+    private Integer level;
+    private Integer experience;
+
     public Long getId() {
         return id;
     }
@@ -38,5 +41,21 @@ public class Course {
 
     public void setUser(User user) {
         this.user = user;
+    }
+
+    public Integer getLevel() {
+        return level;
+    }
+
+    public void setLevel(Integer level) {
+        this.level = level;
+    }
+
+    public Integer getExperience() {
+        return experience;
+    }
+
+    public void setExperience(Integer experience) {
+        this.experience = experience;
     }
 }

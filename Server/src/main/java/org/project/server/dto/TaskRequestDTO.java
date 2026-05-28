@@ -5,6 +5,7 @@ public class TaskRequestDTO {
     private String name;
     private Integer points;
     private Long courseId;
+    private Boolean isDone;
 
     public String getName() {
         return name;
@@ -28,5 +29,13 @@ public class TaskRequestDTO {
 
     public void setCourseId(Long courseId) {
         this.courseId = courseId;
+    }
+
+    public Boolean getIsDone() {
+        return isDone;
+    }
+
+    public void setIsDone(Boolean done) {
+        isDone = done;
     }
 }

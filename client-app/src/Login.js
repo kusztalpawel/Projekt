@@ -29,6 +29,8 @@ const Login = ({ setUser }) => {
             const userData = {
                 username: data.username,
                 token: data.token,
+                level: data.level,
+                experience: data.experience,
             };
 
             setUser(userData);

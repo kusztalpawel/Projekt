@@ -1,7 +1,7 @@
 package org.project.server.dto;
 
-public class UserProgressDTO {
-    /*private Integer level;
+public class CourseProgressDTO {
+    private Integer level;
     private Integer experience;
 
     public Integer getLevel() {
@@ -18,5 +18,5 @@ public class UserProgressDTO {
 
     public void setExperience(Integer experience) {
         this.experience = experience;
-    }*/
+    }
 }

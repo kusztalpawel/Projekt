@@ -11,6 +11,7 @@ public class TaskMapper {
         Task task = new Task();
         task.setName(dto.getName());
         task.setPoints(dto.getPoints());
+        task.setDone(dto.getIsDone());
         return task;
     }
 
@@ -20,6 +21,7 @@ public class TaskMapper {
         dto.setName(task.getName());
         dto.setTime(task.getTime());
         dto.setPoints(task.getPoints());
+        dto.setDone(task.getDone());
         return dto;
     }
 }

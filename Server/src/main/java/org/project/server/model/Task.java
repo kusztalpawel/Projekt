@@ -24,6 +24,9 @@ public class Task {
     @JoinColumn(name = "course_id", nullable = false)
     private Course course;
 
+    @Column(nullable = false)
+    private Boolean isDone;
+
     public Long getId() {
         return id;
     }
@@ -62,5 +65,13 @@ public class Task {
 
     public void setCourse(Course course) {
         this.course = course;
+    }
+
+    public Boolean getDone() {
+        return isDone;
+    }
+
+    public void setDone(Boolean done) {
+        isDone = done;
     }
 }

@@ -14,7 +14,6 @@ public class Achievement {
 
     private Integer points;
 
-
     public Long getId() {
         return id;
     }

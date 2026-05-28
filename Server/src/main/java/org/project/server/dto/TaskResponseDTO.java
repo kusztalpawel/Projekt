@@ -8,6 +8,8 @@ public class TaskResponseDTO {
     private String name;
     private LocalDate time;
     private Integer points;
+    private Long courseId;
+    private Boolean isDone;
 
     public Long getId() {
         return id;
@@ -38,5 +40,21 @@ public class TaskResponseDTO {
 
     public void setPoints(Integer points) {
         this.points = points;
+    }
+
+    public Long getCourseId() {
+        return courseId;
+    }
+
+    public void setCourseId(Long courseId) {
+        this.courseId = courseId;
+    }
+
+    public Boolean getDone() {
+        return isDone;
+    }
+
+    public void setDone(Boolean done) {
+        isDone = done;
     }
 }

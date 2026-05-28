@@ -20,12 +20,11 @@ export default function useCourses(token) {
     }, [token]);
 
     const addCourse = async (name) => {
-
         const newCourse =
             await createCourse(token, name);
 
         setCourses(prev => [...prev, newCourse]);
     };
 
-    return {courses, addCourse};
+    return {courses, setCourses, addCourse};
 }

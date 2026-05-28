@@ -33,7 +33,7 @@ public class UserController {
         User user = userService.login(dto);
         String token = jwtUtil.generateToken(user.getUsername());
 
-        return ResponseEntity.ok(new AuthResponseDTO(token, user.getUsername()));
+        return ResponseEntity.ok(new AuthResponseDTO(token, user.getUsername(), user.getPoints()));
     }
 
     @GetMapping("/{id}")
@@ -48,12 +48,12 @@ public class UserController {
         return ResponseEntity.noContent().build();
     }
 
-    @PutMapping("/{id}/progress")
+    /*@PutMapping("/{id}/progress")
     public ResponseEntity<UserResponseDTO> updateProgress(
             @PathVariable Long id,
             @RequestBody UserProgressDTO dto) {
 
         User updated = userService.updateProgress(id, dto);
         return ResponseEntity.ok(UserMapper.toDTO(updated));
-    }
+    }*/
 }

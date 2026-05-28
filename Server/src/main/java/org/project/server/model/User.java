@@ -19,9 +19,7 @@ public class User {
     @Column(nullable = false)
     private String password;
 
-    private Integer level;
-
-    private Integer experience;
+    private Integer points;
 
     @ManyToMany
     @JoinTable(name = "user_achievements", joinColumns = @JoinColumn(name = "user_id"), inverseJoinColumns = @JoinColumn(name = "achievement_id"))
@@ -55,22 +53,6 @@ public class User {
         this.password = password;
     }
 
-    public Integer getLevel() {
-        return level;
-    }
-
-    public void setLevel(Integer level) {
-        this.level = level;
-    }
-
-    public Integer getExperience() {
-        return experience;
-    }
-
-    public void setExperience(Integer experience) {
-        this.experience = experience;
-    }
-
     public List<Achievement> getAchievements() {
         return achievements;
     }
@@ -83,7 +65,19 @@ public class User {
         return friends;
     }
 
+    public List<Long> getFriendsIds() {
+        return friends.stream().map(User::getId).toList();
+    }
+
     public void setFriends(List<User> friends) {
         this.friends = friends;
+    }
+
+    public Integer getPoints() {
+        return points;
+    }
+
+    public void setPoints(Integer points) {
+        this.points = points;
     }
 }
