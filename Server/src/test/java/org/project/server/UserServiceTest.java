@@ -26,16 +26,13 @@ class UserServiceTest {
 
     @Test
     void createUser() {
-        UserRegisterDTO dto = new UserRegisterDTO();
-        dto.setUsername("username");
-        dto.setPassword("password123");
+        UserRegisterDTO dto = new UserRegisterDTO("username", "password123");
 
         User saved = userService.register(dto);
 
         assertNotNull(saved.getId());
         assertEquals("username", saved.getUsername());
-        assertEquals(1, saved.getLevel());
-        assertEquals(0, saved.getExperience());
+        assertEquals(0, saved.getPoints());
         assertNotNull(saved.getAchievements());
         assertTrue(saved.getAchievements().isEmpty());
         assertNotNull(saved.getFriends());
@@ -50,7 +47,7 @@ class UserServiceTest {
     @Transactional
     void shouldAddFriend() {
         try {
-            userService.addFriend(1L, 2L);
+            userService.addFriend("test","friend");
 
             User user1 = userRepository.findById(1L).orElseThrow();
 

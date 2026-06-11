@@ -24,7 +24,7 @@
 
 .left {
     flex: 1;
-    background: linear-gradient(135deg, #4f46e5, #6366f1);
+    background: linear-gradient(135deg, #2e4058, #508ddd);
     color: white;
     padding: 40px;
     display: flex;
@@ -83,7 +83,7 @@
     padding: 12px;
     border: none;
     border-radius: 8px;
-    background: #4f46e5;
+    background: #2e4058;
     color: white;
     cursor: pointer;
     margin-bottom: 15px;

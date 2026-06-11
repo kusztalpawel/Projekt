@@ -28,7 +28,7 @@ public class TaskService {
 
         Task task = TaskMapper.toEntity(dto);
 
-        Course course = courseRepository.findById(dto.getCourseId()).orElseThrow();
+        Course course = courseRepository.findById(dto.courseId()).orElseThrow();
 
         if (!course.getUser().getUsername().equals(username)) {
             throw new ResponseStatusException(HttpStatus.FORBIDDEN);
@@ -67,9 +67,9 @@ public class TaskService {
             throw new ResponseStatusException(HttpStatus.FORBIDDEN);
         }
 
-        task.setName(dto.getName());
+        task.setName(dto.name());
         task.setTime(LocalDate.now());
-        task.setPoints(dto.getPoints());
+        task.setPoints(dto.points());
 
         return taskRepository.save(task);
     }

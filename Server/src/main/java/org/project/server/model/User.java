@@ -29,6 +29,9 @@ public class User {
     @JoinTable(name = "user_friends", joinColumns = @JoinColumn(name = "user_id"), inverseJoinColumns = @JoinColumn(name = "friend_id"))
     private List<User> friends = new ArrayList<>();
 
+    @OneToOne(mappedBy = "user")
+    private Character character;
+
     public Long getId() {
         return id;
     }
@@ -79,5 +82,9 @@ public class User {
 
     public void setPoints(Integer points) {
         this.points = points;
+    }
+
+    public Character getCharacter() {
+        return character;
     }
 }

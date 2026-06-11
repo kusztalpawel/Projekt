@@ -4,6 +4,7 @@ export const fetchTasks = async (token, selectedCourse) => {
     const res = await fetch(
         `${API_URL}/tasks/course/${selectedCourse}`,
         {
+            method: "GET",
             headers: {
                 Authorization: `Bearer ${token}`,
             },
@@ -28,7 +29,7 @@ export const createTask = async (token, courseId, task) => {
             },
             body: JSON.stringify({
                 name: task,
-                points: 10,
+                points: 100,
                 courseId,
             }),
         }

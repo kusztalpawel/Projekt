@@ -1,6 +1,9 @@
 import React, { useState } from "react";
 import useCourses from "./hooks/useCourses.js";
 import useTasks from "./hooks/useTasks.js";
+import Levels from "./components/Levels.js";
+import Friends from "./components/Friends.js";
+import Character from "./components/Character.js";
 import "./Home.css";
 
 export default function Home({ user, setUser }) {
@@ -13,9 +16,12 @@ export default function Home({ user, setUser }) {
     const [newTask, setNewTask] = useState("");
     const [showCourseModal, setShowCourseModal] = useState(false);
     const [newCourseName, setNewCourseName] = useState("");
+    const [friends, setFriends] = useState(user?.friends);
+    const [character, setCharacter] = useState(user?.character);
+    const [points, setPoints] = useState(user?.points);
 
     const { courses, setCourses, addCourse } = useCourses(user?.token);
-    const { tasks, addTask, toggleTask, deleteTask } = useTasks(user?.token, selectedCourse, setSelectedCourse);
+    const { tasks, addTask, toggleTask, deleteTask } = useTasks(user?.token, selectedCourse, setSelectedCourse, setPoints);
 
     const handleLogout = () => {
         setUser(null);
@@ -35,7 +41,7 @@ export default function Home({ user, setUser }) {
     };
 
     const handleToggleTask = (id) => {
-        toggleTask(user?.token, id);
+        toggleTask(user, id);
     };
 
     const handleDeleteTask = (id) => {
@@ -67,15 +73,14 @@ export default function Home({ user, setUser }) {
                 <div className="nav">
                     {isLoggedIn ? (
                         <>
-                            <div className="courses-dropdown">
-                                <button
-                                    className="courses-btn"
-                                    onClick={() =>
-                                        setShowCourses(!showCourses)
-                                    }
-                                >
-                                    Kursy ⮟
-                                </button>
+                            <div className="courses-dropdown"
+                                onMouseEnter={() =>
+                                    setShowCourses(true)
+                                }
+                                onMouseLeave={() =>
+                                    setShowCourses(false)
+                                }
+                            >Kursy ⮟
 
                                 {showCourses && (
                                     <div className="courses-menu">
@@ -95,12 +100,12 @@ export default function Home({ user, setUser }) {
                             </div>
 
 
-                            <span className="user">
-                                Jestes w {selectedCourse?.name} | LVL {selectedCourse?.level ?? 0} | EXP {selectedCourse?.experience ?? 0} |
-                            </span>
+                            {selectedCourse ? <span className="user">
+                                Jestes w {selectedCourse?.name}
+                            </span> : <span></span>}
 
                             <span className="user">
-                                Witaj, {username}
+                                Witaj, {username} | Punkty: {points}
                             </span>
 
                             <button
@@ -121,59 +126,64 @@ export default function Home({ user, setUser }) {
 
             <main>
                 {user ? (
-                    <div className="tasks-container">
-                        <h1>Twoje zadania</h1>
+                    <>
+                        <div className="tasks-container">
+                            <h1>Twoje zadania</h1>
 
-                        <div className="task-input">
-                            <input
-                                type="text"
-                                placeholder="Dodaj nowe zadanie..."
-                                value={newTask}
-                                onChange={(e) =>
-                                    setNewTask(e.target.value)
-                                }
-                            />
+                            <div className="task-input">
+                                <input
+                                    type="text"
+                                    placeholder="Dodaj nowe zadanie..."
+                                    value={newTask}
+                                    onChange={(e) =>
+                                        setNewTask(e.target.value)
+                                    }
+                                />
 
-                            <button onClick={handleAddTask}>
-                                Dodaj
-                            </button>
+                                <button onClick={handleAddTask}>
+                                    Dodaj
+                                </button>
+                            </div>
+
+                            <ul className="task-list">
+                                {tasks.map((task) => (
+                                    <li key={task.id} className="task">
+                                        <div className="task-left">
+                                            <input
+                                                type="checkbox"
+                                                className="task-checkbox"
+                                                checked={task.isDone}
+                                                onChange={() => handleToggleTask(task.id)}
+                                            />
+                                            <span className="task-name">
+                                                {task.name}
+                                            </span>
+                                            <span className="task-points">
+                                                {task.points} EXP
+                                            </span>
+                                        </div>
+
+                                        <button
+                                            className="delete-btn"
+                                            onClick={() =>
+                                                handleDeleteTask(task.id)
+                                            }
+                                        >
+                                            X
+                                        </button>
+                                    </li>
+                                ))}
+                            </ul>
                         </div>
-
-                        <ul className="task-list">
-                            {tasks.map((task) => (
-                                <li key={task.id} className="task">
-                                    <div className="task-left">
-                                        <input
-                                            type="checkbox"
-                                            className="task-checkbox"
-                                            checked={task.done}
-                                            onChange={() => handleToggleTask(task.id)}
-                                        />
-                                        <span className="task-name">
-                                            {task.name}
-                                        </span>
-                                        <span className="task-points">
-                                            {task.points} EXP
-                                        </span>
-                                    </div>
-
-                                    <button
-                                        className="delete-btn"
-                                        onClick={() =>
-                                            handleDeleteTask(task.id)
-                                        }
-                                    >
-                                        X
-                                    </button>
-                                </li>
-                            ))}
-                        </ul>
-                    </div>
+                        <Levels currentLevel={selectedCourse?.level ?? 0} currentExperience={selectedCourse?.experience ?? 0} experienceNeeded={selectedCourse?.experienceNeeded ?? 1000000000}/>
+                        <Character token = {user?.token} character={character} setCharacter={setCharacter} points = {points} setPoints = {setPoints}/>
+                        <Friends token = {user?.token} friends = {friends} setFriends = {setFriends}/>
+                    </>
                 ) : (
-                    <h1>
+                    <h2>
                         Aby korzystać z aplikacji należy
                         się zalogować
-                    </h1>
+                    </h2>
                 )}
             </main>
         </div>

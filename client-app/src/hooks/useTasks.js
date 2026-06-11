@@ -1,7 +1,8 @@
 import { useEffect, useState } from "react";
 import { fetchTasks, createTask, toggleTaskApi, deleteTaskApi } from "../api/tasksApi";
+import { fetchUserProgress } from "../api/usersApi";
 
-export default function useTasks(token, selectedCourse, setSelectedCourse) {
+export default function useTasks(token, selectedCourse, setSelectedCourse, setPoints) {
     const [tasks, setTasks] = useState([]);
 
     useEffect(() => {
@@ -35,11 +36,19 @@ export default function useTasks(token, selectedCourse, setSelectedCourse) {
         setTasks(prev => [...prev, newTask]);
     };
 
-    const toggleTask = async (token, id) => {
-        const updated = await toggleTaskApi(token, id);
+    const toggleTask = async (user, id) => {
+        const previousLevel = selectedCourse.level;
+
+        const updated = await toggleTaskApi(user?.token, id);
 
         setTasks(prev =>prev.map(task => task.id === id ? updated.task : task));
-        setSelectedCourse(prev => ({...prev, level: updated.progress.level, experience: updated.progress.experience}));
+        setSelectedCourse(prev => ({...prev, level: updated.progress.level, experience: updated.progress.experience, experienceNeeded: updated.progress.experienceNeeded}));
+
+        if (updated.progress.level > previousLevel) {
+            const userProgress = await fetchUserProgress(user?.token);
+
+            setPoints(userProgress.points);
+        }
     };
 
     const deleteTask = async (token, id) => {

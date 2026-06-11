@@ -1,48 +1,33 @@
 import React, { useState } from "react";
-import { Link } from "react-router";
-import { useNavigate } from "react-router";
+import { Link, useNavigate } from "react-router";
 import "./Login.css";
+import { fetchUserLogin } from "./api/usersApi";
 
 const Login = ({ setUser }) => {
     const [username, setUsername] = useState("");
     const [password, setPassword] = useState("");
 
-    const API_URL = "http://localhost:8080";
     const navigate = useNavigate();
 
     const handleSubmit = async (e) => {
         e.preventDefault();
 
         try {
-            const res = await fetch(`${API_URL}/users/login`, {
-                method: "POST",
-                headers: { "Content-Type": "application/json", },
-                body: JSON.stringify({ username, password }),
-            });
-
-            const data = await res.json();
-
-            if(!res.ok){
-                throw new Error(data.message || "Login failed");
-            }
+            const data = await fetchUserLogin(username, password);
 
             const userData = {
                 username: data.username,
                 token: data.token,
-                level: data.level,
-                experience: data.experience,
+                points: data.points,
+                achievements: data.achievements,
+                friends: data.friends,
+                character: data.character,
             };
 
             setUser(userData);
 
             localStorage.setItem("user", JSON.stringify(userData));
             navigate("/");
-
-            if (!res.ok) {
-                throw new Error(data.message || "Login failed");
-            }
-
-            console.log("Logged user:", data);
         } catch (err) {
             console.error("Login error:", err);
         }

@@ -1,11 +1,13 @@
 import React, { useState } from "react";
-import { Link } from "react-router";
+import { Link, useNavigate } from "react-router";
 import "./Login.css";
 
 const Register = () => {
     const [username, setUsername] = useState("");
     const [password, setPassword] = useState("");
     const [confirmPassword, setConfirmPassword] = useState("");
+
+    const navigate = useNavigate();
 
     const API_URL = "http://localhost:8080";
 
@@ -32,7 +34,7 @@ const Register = () => {
                 throw new Error(data.message || "Register failed");
             }
 
-            console.log("Registered user:", data);
+            navigate("/");
         } catch (err) {
             console.error("Register error:", err);
         }

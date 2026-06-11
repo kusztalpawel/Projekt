@@ -3,13 +3,10 @@ package org.project.server.controller;
 import org.project.server.dto.CompleteTaskResponseDTO;
 import org.project.server.dto.TaskRequestDTO;
 import org.project.server.dto.TaskResponseDTO;
-import org.project.server.dto.UserProgressDTO;
 import org.project.server.mapper.CourseMapper;
 import org.project.server.mapper.TaskMapper;
-import org.project.server.mapper.UserMapper;
 import org.project.server.model.Course;
 import org.project.server.model.Task;
-import org.project.server.model.User;
 import org.project.server.service.CompleteTaskService;
 import org.project.server.service.TaskService;
 import org.springframework.http.HttpStatus;
@@ -34,10 +31,7 @@ public class TaskController {
 
     @PostMapping
     public ResponseEntity<TaskResponseDTO> create(@RequestBody TaskRequestDTO dto, Authentication authentication) {
-
-        String username = authentication.getName();
-
-        Task task = taskService.createTask(dto, username);
+        Task task = taskService.createTask(dto, authentication.getName());
 
         return ResponseEntity.status(HttpStatus.CREATED).body(TaskMapper.toDTO(task));
     }
@@ -49,9 +43,7 @@ public class TaskController {
 
     @GetMapping("/course/{courseId}")
     public ResponseEntity<List<TaskResponseDTO>> getByCourseId(@PathVariable Long courseId, Authentication authentication) {
-        String name = authentication.getName();
-
-        return ResponseEntity.ok(taskService.getUserTasksByCourseId(courseId, name).stream().map(TaskMapper::toDTO).toList());
+        return ResponseEntity.ok(taskService.getUserTasksByCourseId(courseId, authentication.getName()).stream().map(TaskMapper::toDTO).toList());
     }
 
     @GetMapping("/{id}")
@@ -61,9 +53,7 @@ public class TaskController {
 
     @PutMapping("/{id}")
     public ResponseEntity<TaskResponseDTO> update(@PathVariable Long id, @RequestBody TaskRequestDTO dto, Authentication authentication) {
-
-        String username = authentication.getName();
-        Task updated = taskService.updateTask(id, dto, username);
+        Task updated = taskService.updateTask(id, dto, authentication.getName());
 
         return ResponseEntity.ok(TaskMapper.toDTO(updated));
     }
@@ -71,8 +61,7 @@ public class TaskController {
     @Transactional
     @PatchMapping("/{id}")
     public ResponseEntity<CompleteTaskResponseDTO> setDone(@PathVariable Long id, Authentication authentication) {
-        String username = authentication.getName();
-        Task task = completeTaskService.completeTask(id, username);
+        Task task = completeTaskService.completeTask(id, authentication.getName());
         Course course = task.getCourse();
 
         CompleteTaskResponseDTO response = new CompleteTaskResponseDTO(TaskMapper.toDTO(task), CourseMapper.progressToDTO(course));
@@ -82,9 +71,7 @@ public class TaskController {
 
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> delete(@PathVariable Long id, Authentication authentication) {
-        String username = authentication.getName();
-
-        taskService.deleteTask(id, username);
+        taskService.deleteTask(id, authentication.getName());
         return ResponseEntity.noContent().build();
     }
 }

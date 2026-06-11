@@ -1,6 +1,5 @@
 package org.project.server.service;
 
-import org.project.server.dto.CourseProgressDTO;
 import org.project.server.dto.CourseRequestDTO;
 import org.project.server.mapper.CourseMapper;
 import org.project.server.model.Course;
@@ -68,28 +67,22 @@ public class CourseService {
         courseRepository.deleteById(id);
     }
 
-    public Course updateProgress(Long courseId, CourseProgressDTO dto) {
-        Course course = getById(courseId);
+    public int setExperience(Course course, int points) {
+        int oldLevel = course.getLevel();
+        int level = oldLevel;
+        int experience = course.getExperience() + points;
 
-        course.setLevel(dto.getLevel());
-        course.setExperience(dto.getExperience());
+        int experienceNeeded = level * 50;
 
-        return courseRepository.save(course);
-    }
+        while (experience >= experienceNeeded) {
+            experience -= experienceNeeded;
+            level++;
+            experienceNeeded = level * 50;
+        }
 
-    public CourseProgressDTO addExperience(Course course, int points) {
-        CourseProgressDTO dto = new CourseProgressDTO();
-        dto.setLevel(course.getLevel());
-        dto.setExperience(course.getExperience() + points);
+        course.setLevel(level);
+        course.setExperience(Math.max(experience, 0));
 
-        return dto;
-    }
-
-    public CourseProgressDTO removeExperience(Course course, int points) {
-        CourseProgressDTO dto = new CourseProgressDTO();
-        dto.setLevel(course.getLevel());
-        dto.setExperience(Math.max(0, course.getExperience() - points));
-
-        return dto;
+        return Math.max(level - oldLevel, 0);
     }
 }

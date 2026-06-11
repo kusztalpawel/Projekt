@@ -1,34 +1,37 @@
 package org.project.server.service;
 
 import jakarta.transaction.Transactional;
-import org.project.server.dto.CourseProgressDTO;
 import org.project.server.model.Course;
 import org.project.server.model.Task;
+import org.project.server.model.User;
 import org.springframework.stereotype.Service;
 
 @Service
 public class CompleteTaskService {
     private final TaskService taskService;
     private final CourseService courseService;
+    private final UserService userService;
 
-    public CompleteTaskService(TaskService taskService, CourseService courseService) {
+    public CompleteTaskService(TaskService taskService, CourseService courseService, UserService userService) {
         this.taskService = taskService;
         this.courseService = courseService;
+        this.userService = userService;
     }
 
     @Transactional
     public Task completeTask(Long taskId, String username) {
         Task task = taskService.setTaskDone(taskId, username);
         Course course = task.getCourse();
-        CourseProgressDTO dto;
+        int newLevels;
+        User user = course.getUser();
 
         if (Boolean.TRUE.equals(task.getDone())) {
-            dto = courseService.addExperience(course, task.getPoints());
+            newLevels = courseService.setExperience(course, task.getPoints());
         } else {
-            dto = courseService.removeExperience(course, task.getPoints());
+            newLevels = courseService.setExperience(course, -task.getPoints());
         }
 
-        courseService.updateProgress(course.getId(), dto);
+        userService.setPoints(user, newLevels);
 
         return task;
     }

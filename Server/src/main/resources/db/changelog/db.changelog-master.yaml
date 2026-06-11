@@ -15,3 +15,9 @@ databaseChangeLog:
       file: db/changelog/changes/007-alter_courses_table.sql
   - include:
       file: db/changelog/changes/008-alter_users_table.sql
+  - include:
+      file: db/changelog/changes/009-create_characters_table.sql
+  - include:
+      file: db/changelog/changes/010-alter_characters_id_column.sql
+  - include:
+      file: db/changelog/changes/011-alter_characters_table.sql

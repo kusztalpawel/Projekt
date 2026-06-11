@@ -28,10 +28,7 @@ class TaskServiceTest {
         Task created = null;
 
         try {
-            TaskRequestDTO dto = new TaskRequestDTO();
-            dto.setName("Task 1");
-            dto.setPoints(10);
-            dto.setTime(LocalDate.now());
+            TaskRequestDTO dto = new TaskRequestDTO("Task", 10, 1L, false);
 
             created = taskService.createTask(dto, "user");
 

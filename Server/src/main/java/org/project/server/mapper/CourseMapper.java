@@ -15,14 +15,11 @@ public class CourseMapper {
     }
 
     public static CourseResponseDTO toDTO(Course course) {
-        return new CourseResponseDTO(course.getId(), course.getName(),course.getLevel(), course.getExperience());
+        return new CourseResponseDTO(course.getId(), course.getName(),course.getLevel(), course.getExperience(), course.getLevel() * 50);
     }
 
     public static CourseProgressDTO progressToDTO(Course course) {
-        CourseProgressDTO dto = new CourseProgressDTO();
-
-        dto.setLevel(course.getLevel());
-        dto.setExperience(course.getExperience());
+        CourseProgressDTO dto = new CourseProgressDTO(course.getLevel(), course.getExperience(), course.getLevel() * 50);
 
         return dto;
     }

@@ -10,8 +10,7 @@ import java.util.Date;
 
 @Component
 public class JwtUtil {
-
-    private final String SECRET = "CHANGE_THIS_TO_A_LONG_RANDOM_SECRET_KEY";
+    private static final String SECRET = "CHANGE_THIS_TO_A_LONG_RANDOM_SECRET_KEY";
     SecretKey key = Keys.hmacShaKeyFor(SECRET.getBytes(StandardCharsets.UTF_8));
 
     public String generateToken(String username) {

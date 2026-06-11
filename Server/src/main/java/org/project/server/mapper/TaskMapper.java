@@ -9,19 +9,13 @@ public class TaskMapper {
 
     public static Task toEntity(TaskRequestDTO dto) {
         Task task = new Task();
-        task.setName(dto.getName());
-        task.setPoints(dto.getPoints());
-        task.setDone(dto.getIsDone());
+        task.setName(dto.name());
+        task.setPoints(dto.points());
+        task.setDone(dto.isDone());
         return task;
     }
 
     public static TaskResponseDTO toDTO(Task task) {
-        TaskResponseDTO dto = new TaskResponseDTO();
-        dto.setId(task.getId());
-        dto.setName(task.getName());
-        dto.setTime(task.getTime());
-        dto.setPoints(task.getPoints());
-        dto.setDone(task.getDone());
-        return dto;
+        return new TaskResponseDTO(task.getId(), task.getName(), task.getTime(), task.getPoints(), task.getCourse().getId(), task.getDone());
     }
 }
