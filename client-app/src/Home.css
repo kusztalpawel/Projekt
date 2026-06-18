@@ -183,6 +183,15 @@ h1 {
     cursor: pointer;
 }
 
+.courses-menu button.template {
+    color: grey;
+}
+
+.courses-menu button.template:hover {
+    color: black;
+    cursor: pointer;
+}
+
 .modal-overlay {
     position: fixed;
     top: 0;

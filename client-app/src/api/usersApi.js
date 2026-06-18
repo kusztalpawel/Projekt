@@ -42,3 +42,15 @@ export const fetchAddFriend = async (token, friendUsername) => {
 
     return await res.json();
 };
+
+export const fetchAchievements = async (token) => {
+    const res = await fetch(`${API_URL}/achievements`, {
+        headers: {
+            Authorization: `Bearer ${token}`,
+        },
+    });
+
+    if(!res.ok) {
+        throw new Error("Failed to fetch user achievements");
+    }
+}

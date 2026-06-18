@@ -1,11 +1,10 @@
 package org.project.server.service;
 
-import org.project.server.model.Attack;
+import org.project.server.model.*;
 import org.project.server.model.Character;
-import org.project.server.model.StatType;
-import org.project.server.model.User;
 import org.project.server.repository.CharacterRepository;
 import org.project.server.repository.UserRepository;
+import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -16,12 +15,16 @@ import java.util.List;
 
 @Service
 public class CharacterService {
-    private final CharacterRepository  characterRepository;
+    private final CharacterRepository characterRepository;
     private final UserRepository userRepository;
+    private final UserService userService;
+    private final ApplicationEventPublisher publisher;
 
-    public CharacterService(CharacterRepository characterRepository,  UserRepository userRepository) {
+    public CharacterService(CharacterRepository characterRepository, UserRepository userRepository, UserService userService, ApplicationEventPublisher publisher) {
         this.characterRepository = characterRepository;
         this.userRepository = userRepository;
+        this.userService = userService;
+        this.publisher = publisher;
     }
 
     public Character getCharacter(Long id){
@@ -61,6 +64,9 @@ public class CharacterService {
         user.setPoints(user.getPoints() - 1);
 
         characterRepository.save(character);
+
+        userService.incrementStat(user, AchievementMetric.SKILLPOINTS_USED);
+        publisher.publishEvent(new ProgressEvent(user.getId(), AchievementMetric.SKILLPOINTS_USED, user.getSkillpointsUsed()));
 
         return character;
     }

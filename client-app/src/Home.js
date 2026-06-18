@@ -1,15 +1,17 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import useCourses from "./hooks/useCourses.js";
 import useTasks from "./hooks/useTasks.js";
 import Levels from "./components/Levels.js";
 import Friends from "./components/Friends.js";
 import Character from "./components/Character.js";
+import { fetchAchievements } from "./api/usersApi.js";
 import "./Home.css";
 
 export default function Home({ user, setUser }) {
     const username = user?.username;
 
     const isLoggedIn = !!user?.token;
+    const isAdmin = user?.role === "ADMIN";
 
     const [showCourses, setShowCourses] = useState(false);
     const [selectedCourse, setSelectedCourse] = useState(null);
@@ -20,12 +22,13 @@ export default function Home({ user, setUser }) {
     const [character, setCharacter] = useState(user?.character);
     const [points, setPoints] = useState(user?.points);
 
-    const { courses, setCourses, addCourse } = useCourses(user?.token);
+    const { courses, templates, addCourse, loadCourses, loadTemplates, enrollCourse } = useCourses(user?.token);
     const { tasks, addTask, toggleTask, deleteTask } = useTasks(user?.token, selectedCourse, setSelectedCourse, setPoints);
 
     const handleLogout = () => {
         setUser(null);
         localStorage.removeItem("user");
+        sessionStorage.removeItem("user");
     };
 
     const handleAddTask = async () => {
@@ -65,6 +68,30 @@ export default function Home({ user, setUser }) {
         setShowCourses(false);
     }
 
+    const onTemplateChosen = async (tpt) => {
+        try{
+            await enrollCourse(tpt.id);
+            setShowCourses(false);
+        } catch (err){
+            console.error(err);
+        }
+    }
+
+    const loadAchievements = async () => {
+            try {
+                user.achievements = await fetchAchievements(user?.token);
+                console.log("Dziala");
+            } catch (err) {
+                console.error("Error fetching achievements:", err);
+            }
+        };
+
+    useEffect(() => {
+        loadAchievements();
+    }, []);
+
+    console.log(user?.achievements);
+
     return (<>
         <div className="page">
             <header>
@@ -73,10 +100,17 @@ export default function Home({ user, setUser }) {
                 <div className="nav">
                     {isLoggedIn ? (
                         <>
+                            <div>
+                                {isAdmin && (
+                                    <a className="header-link" href="/admin">ADMIN PANEL</a>
+                                )}
+                            </div>
                             <div className="courses-dropdown"
-                                onMouseEnter={() =>
-                                    setShowCourses(true)
-                                }
+                                onMouseEnter={ async () => {
+                                    setShowCourses(true);
+                                    await loadCourses();
+                                    await loadTemplates();
+                                }}
                                 onMouseLeave={() =>
                                     setShowCourses(false)
                                 }
@@ -90,6 +124,14 @@ export default function Home({ user, setUser }) {
                                                 onClick={() => {onCourseChosen(c)}}
                                             >
                                                 {c.name}
+                                            </button>
+                                        ))}
+                                        {templates.map((t) => (
+                                            <button className="template"
+                                                key={t.id}
+                                                onClick={() => {onTemplateChosen(t)}}
+                                            >
+                                                {t.name}
                                             </button>
                                         ))}
                                         <button onClick={() => (setShowCourseModal(true))}>

@@ -1,8 +1,5 @@
 package org.project.server.dto;
 
-import jakarta.persistence.*;
-import org.project.server.model.User;
-
 import java.time.LocalDate;
 
 public class ExamRequestDTO {

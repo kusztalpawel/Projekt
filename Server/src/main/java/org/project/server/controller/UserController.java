@@ -2,8 +2,10 @@ package org.project.server.controller;
 
 import org.project.server.JwtUtil;
 import org.project.server.dto.*;
+import org.project.server.mapper.AchievementMapper;
 import org.project.server.mapper.UserMapper;
 import org.project.server.model.User;
+import org.project.server.service.AchievementService;
 import org.project.server.service.CharacterService;
 import org.project.server.service.UserService;
 import org.springframework.http.HttpStatus;
@@ -18,34 +20,38 @@ public class UserController {
 
     private final UserService userService;
     private final CharacterService characterService;
+    private final AchievementService achievementService;
     private final JwtUtil jwtUtil;
 
-    public UserController(UserService userService, CharacterService characterService,  JwtUtil jwtUtil) {
+    public UserController(UserService userService, CharacterService characterService,  JwtUtil jwtUtil, AchievementService achievementService) {
         this.userService = userService;
         this.characterService = characterService;
+        this.achievementService = achievementService;
         this.jwtUtil = jwtUtil;
     }
 
     @PostMapping("/register")
-    public ResponseEntity<UserResponseDTO> register(@RequestBody UserRegisterDTO dto) {
+    public ResponseEntity<UserRegisterDTO> register(@RequestBody UserRegisterDTO dto) {
         User user = userService.register(dto);
         characterService.createDefaultCharacter(user);
 
-        return ResponseEntity.status(HttpStatus.CREATED)
-                .body(UserMapper.toDTO(user));
+        return ResponseEntity.status(HttpStatus.CREATED).body(UserMapper.registerToDTO(user));
     }
 
     @PostMapping("/login")
     public ResponseEntity<AuthResponseDTO> login(@RequestBody UserLoginDTO dto) {
         User user = userService.login(dto);
-        String token = jwtUtil.generateToken(user.getUsername());
+        List<AchievementDTO> achievementDTOs = AchievementMapper.toDTOList(achievementService.getUserAchievements(user));
+        String token = jwtUtil.generateToken(user.getUsername(), user.getRole().name());
 
-        return ResponseEntity.ok(UserMapper.authToDTO(token, user));
+        return ResponseEntity.ok(UserMapper.authToDTO(token, user, achievementDTOs));
     }
 
     @GetMapping("/{id}")
     public ResponseEntity<UserResponseDTO> getUser(@PathVariable Long id) {
-        return ResponseEntity.ok(UserMapper.toDTO(userService.getById(id)));
+        User user = userService.getById(id);
+        List<AchievementDTO> achievementDTOs = AchievementMapper.toDTOList(achievementService.getUserAchievements(user));
+        return ResponseEntity.ok(UserMapper.toDTO(user, achievementDTOs));
     }
 
     @DeleteMapping("/{id}")

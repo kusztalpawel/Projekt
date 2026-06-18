@@ -33,8 +33,6 @@ class UserServiceTest {
         assertNotNull(saved.getId());
         assertEquals("username", saved.getUsername());
         assertEquals(0, saved.getPoints());
-        assertNotNull(saved.getAchievements());
-        assertTrue(saved.getAchievements().isEmpty());
         assertNotNull(saved.getFriends());
         assertTrue(saved.getFriends().isEmpty());
 
@@ -62,45 +60,6 @@ class UserServiceTest {
 
             userRepository.save(u1);
             userRepository.save(u2);
-        }
-    }
-
-    @Test
-    @Transactional
-    void shouldAssignAchievementToUser() {
-
-        Achievement achievement = null;
-
-        try {
-            achievement = new Achievement();
-            achievement.setName("First Login");
-            achievement.setPoints(100);
-            achievement = achievementRepository.save(achievement);
-
-            userService.addAchievement(1L, achievement.getId());
-
-            User user = userRepository.findById(1L).orElseThrow();
-
-            Achievement finalAchievement = achievement;
-            assertTrue(
-                    user.getAchievements()
-                            .stream()
-                            .anyMatch(a -> a.getId().equals(finalAchievement.getId()))
-            );
-        }
-        finally {
-            if (achievement != null && achievement.getId() != null) {
-
-                User user = userRepository.findById(1L).orElseThrow();
-
-                Achievement finalAchievement1 = achievement;
-                user.getAchievements()
-                        .removeIf(a -> a.getId().equals(finalAchievement1.getId()));
-
-                userRepository.save(user);
-
-                achievementRepository.deleteById(achievement.getId());
-            }
         }
     }
 }

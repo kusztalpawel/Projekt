@@ -21,9 +21,11 @@ public class User {
 
     private Integer points;
 
-    @ManyToMany
-    @JoinTable(name = "user_achievements", joinColumns = @JoinColumn(name = "user_id"), inverseJoinColumns = @JoinColumn(name = "achievement_id"))
-    private List<Achievement> achievements =  new ArrayList<>();
+    private int friendsCount;
+    private int tasksCompleted;
+    private int loginStreak;
+    private int levelsCompleted;
+    private int skillpointsUsed;
 
     @ManyToMany
     @JoinTable(name = "user_friends", joinColumns = @JoinColumn(name = "user_id"), inverseJoinColumns = @JoinColumn(name = "friend_id"))
@@ -31,6 +33,9 @@ public class User {
 
     @OneToOne(mappedBy = "user")
     private Character character;
+
+    @Enumerated(EnumType.STRING)
+    private UserRole role = UserRole.USER;
 
     public Long getId() {
         return id;
@@ -56,13 +61,6 @@ public class User {
         this.password = password;
     }
 
-    public List<Achievement> getAchievements() {
-        return achievements;
-    }
-
-    public void setAchievements(List<Achievement> achievements) {
-        this.achievements = achievements;
-    }
 
     public List<User> getFriends() {
         return friends;
@@ -86,5 +84,53 @@ public class User {
 
     public Character getCharacter() {
         return character;
+    }
+
+    public void setRole(UserRole role) {
+        this.role = role;
+    }
+
+    public UserRole getRole() {
+        return role;
+    }
+
+    public int getFriendsCount() {
+        return friendsCount;
+    }
+
+    public void setFriendsCount(int friendsCount) {
+        this.friendsCount = friendsCount;
+    }
+
+    public int getTasksCompleted() {
+        return tasksCompleted;
+    }
+
+    public void setTasksCompleted(int tasksCompleted) {
+        this.tasksCompleted = tasksCompleted;
+    }
+
+    public int getLoginStreak() {
+        return loginStreak;
+    }
+
+    public void setLoginStreak(int loginStreak) {
+        this.loginStreak = loginStreak;
+    }
+
+    public int getSkillpointsUsed() {
+        return skillpointsUsed;
+    }
+
+    public void setSkillpointsUsed(int skillpointsUsed) {
+        this.skillpointsUsed = skillpointsUsed;
+    }
+
+    public int getLevelsCompleted() {
+        return levelsCompleted;
+    }
+
+    public void setLevelsCompleted(int levelsCompleted) {
+        this.levelsCompleted = levelsCompleted;
     }
 }

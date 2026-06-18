@@ -2,12 +2,12 @@ package org.project.server.service;
 
 import org.project.server.dto.UserLoginDTO;
 import org.project.server.dto.UserRegisterDTO;
-import org.project.server.dto.UserResponseDTO;
 import org.project.server.mapper.UserMapper;
-import org.project.server.model.Achievement;
+import org.project.server.model.AchievementMetric;
+import org.project.server.model.ProgressEvent;
 import org.project.server.model.User;
-import org.project.server.repository.AchievementRepository;
 import org.project.server.repository.UserRepository;
+import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -21,12 +21,12 @@ import java.util.List;
 public class UserService {
 
     private final UserRepository userRepository;
-    private final AchievementRepository achievementRepository;
     private final PasswordEncoder passwordEncoder;
+    private final ApplicationEventPublisher publisher;
 
-    public UserService(UserRepository userRepository, AchievementRepository achievementRepository, PasswordEncoder passwordEncoder) {
+    public UserService(UserRepository userRepository, PasswordEncoder passwordEncoder, ApplicationEventPublisher publisher) {
         this.userRepository = userRepository;
-        this.achievementRepository = achievementRepository;
+        this.publisher = publisher;
         this.passwordEncoder = passwordEncoder;
     }
 
@@ -48,6 +48,8 @@ public class UserService {
             throw new BadCredentialsException("Invalid credentials");
         }
 
+        publisher.publishEvent(new ProgressEvent(user.getId(), AchievementMetric.LOGIN_STREAK, user.getLoginStreak()));
+
         return user;
     }
 
@@ -66,20 +68,8 @@ public class UserService {
         userRepository.deleteById(id);
     }
 
-    public void addAchievement(Long userId, Long achievementId) {
-
-        User user = getById(userId);
-
-        Achievement achievement = achievementRepository.findById(achievementId).orElseThrow();
-
-        user.getAchievements().add(achievement);
-
-        userRepository.save(user);
-    }
-
     @Transactional
     public void addFriend(String username, String friendUsername) {
-
         if (username.equals(friendUsername)) {
             throw new IllegalArgumentException("Cannot add yourself as friend");
         }
@@ -99,6 +89,11 @@ public class UserService {
 
         userRepository.save(user);
         userRepository.save(friend);
+
+        incrementStat(user, AchievementMetric.FRIENDS_COUNT);
+        publisher.publishEvent(new ProgressEvent(user.getId(), AchievementMetric.FRIENDS_COUNT, user.getFriendsCount()));
+        incrementStat(friend, AchievementMetric.FRIENDS_COUNT);
+        publisher.publishEvent(new ProgressEvent(friend.getId(), AchievementMetric.FRIENDS_COUNT, friend.getFriendsCount()));
     }
 
     public List<User> getFriends(String username) {
@@ -110,5 +105,15 @@ public class UserService {
 
     public void setPoints(User user, int points) {
         user.setPoints(user.getPoints() + points);
+    }
+
+    public void incrementStat(User user, AchievementMetric achievementMetric) {
+        switch(achievementMetric) {
+            case FRIENDS_COUNT -> user.setFriendsCount(user.getFriendsCount() + 1);
+            case TASKS_COMPLETED -> user.setTasksCompleted(user.getTasksCompleted() + 1);
+            case LOGIN_STREAK-> user.setLoginStreak(user.getLoginStreak() + 1);
+            case LEVELS_COMPLETED -> user.setLevelsCompleted(user.getLevelsCompleted() + 1);
+            case SKILLPOINTS_USED -> user.setSkillpointsUsed(user.getSkillpointsUsed() + 1);
+        };
     }
 }

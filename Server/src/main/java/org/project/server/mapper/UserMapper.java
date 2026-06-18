@@ -17,8 +17,12 @@ public class UserMapper {
         return user;
     }
 
-    public static UserResponseDTO toDTO(User user) {
-        return new UserResponseDTO(user.getUsername(), user.getPoints(), user.getAchievements(), allFriendsToDTO(user.getFriends()));
+    public static UserResponseDTO toDTO(User user, List<AchievementDTO> achievements) {
+        return new UserResponseDTO(user.getUsername(), user.getPoints(), achievements, allFriendsToDTO(user.getFriends()), CharacterMapper.toDTO(user.getCharacter()));
+    }
+
+    public static UserRegisterDTO registerToDTO(User user) {
+        return new UserRegisterDTO(user.getUsername(), user.getPassword());
     }
 
     public static UserProgressDTO progressToDTO(User user){
@@ -38,13 +42,7 @@ public class UserMapper {
         return friendsDTO;
     }
 
-    public static AuthResponseDTO authToDTO(String token, User user){
-        return new AuthResponseDTO(
-                token,
-                user.getUsername(),
-                user.getPoints(),
-                user.getAchievements(),
-                allFriendsToDTO(user.getFriends()),
-                CharacterMapper.toDTO(user.getCharacter()));
+    public static AuthResponseDTO authToDTO(String token, User user, List<AchievementDTO> achievements) {
+        return new AuthResponseDTO(token, user.getUsername(), user.getPoints(), achievements, allFriendsToDTO(user.getFriends()), CharacterMapper.toDTO(user.getCharacter()));
     }
 }

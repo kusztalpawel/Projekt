@@ -19,8 +19,6 @@ public class CourseMapper {
     }
 
     public static CourseProgressDTO progressToDTO(Course course) {
-        CourseProgressDTO dto = new CourseProgressDTO(course.getLevel(), course.getExperience(), course.getLevel() * 50);
-
-        return dto;
+        return new CourseProgressDTO(course.getLevel(), course.getExperience(), course.getLevel() * 50);
     }
 }

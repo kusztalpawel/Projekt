@@ -2,10 +2,12 @@ import React, { useState } from "react";
 import { Link, useNavigate } from "react-router";
 import "./Login.css";
 import { fetchUserLogin } from "./api/usersApi";
+import { jwtDecode } from "jwt-decode";
 
 const Login = ({ setUser }) => {
     const [username, setUsername] = useState("");
     const [password, setPassword] = useState("");
+    const [rememberMe, setRememberMe] = useState(false);
 
     const navigate = useNavigate();
 
@@ -14,6 +16,7 @@ const Login = ({ setUser }) => {
 
         try {
             const data = await fetchUserLogin(username, password);
+            const decoded = jwtDecode(data.token);
 
             const userData = {
                 username: data.username,
@@ -22,11 +25,18 @@ const Login = ({ setUser }) => {
                 achievements: data.achievements,
                 friends: data.friends,
                 character: data.character,
+                role: decoded.role,
             };
 
             setUser(userData);
 
-            localStorage.setItem("user", JSON.stringify(userData));
+            if (rememberMe) {
+                localStorage.setItem("user", JSON.stringify(userData));
+                sessionStorage.removeItem("user");
+            } else {
+                sessionStorage.setItem("user", JSON.stringify(userData));
+                localStorage.removeItem("user");
+            }
             navigate("/");
         } catch (err) {
             console.error("Login error:", err);
@@ -65,7 +75,7 @@ const Login = ({ setUser }) => {
 
                         <div className="options">
                             <label>
-                                <input type="checkbox" /> Nie wylogowuj
+                                <input type="checkbox" checked={rememberMe} onChange={(e) => setRememberMe(e.target.checked)}/> Nie wylogowuj
                             </label>
                         </div>
 

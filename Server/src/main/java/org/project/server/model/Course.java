@@ -3,7 +3,7 @@ package org.project.server.model;
 import jakarta.persistence.*;
 
 @Entity
-@Table(name = "courses")
+@Table(name = "courses", uniqueConstraints = {@UniqueConstraint(columnNames = {"user_id", "name"})})
 public class Course {
 
     @Id
