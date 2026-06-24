@@ -1,13 +1,14 @@
 import "./Character.css";
 import { addStatPoint } from "../api/characterApi";
 import { fetchUserProgress } from "../api/usersApi";
+const API_URL = "http://localhost:8080";
 
-export default function Character({ token, character, setCharacter, points, setPoints }) {
+export default function Character({ user, character, setCharacter, points, setPoints, setActiveView }) {
     const handleAddStatPoint = async (stat) => {
         if(points > 0){
             try {
-                const updatedCharacter = await addStatPoint(token, stat);
-                const updatedPoints = await fetchUserProgress(token);
+                const updatedCharacter = await addStatPoint(user?.token, stat);
+                const updatedPoints = await fetchUserProgress(user?.token);
 
                 setCharacter(updatedCharacter);
                 setPoints(updatedPoints.points);
@@ -19,28 +20,31 @@ export default function Character({ token, character, setCharacter, points, setP
 
     return (
         <div className="character-stats">
-            <h3>Character Stats</h3>
-
+            <h3>Statystyki postaci</h3>
+            <div>
+                <img className="player-img" src={`${API_URL}/images/skins/${user?.skin}`} alt="" onClick={() => setActiveView("customization")}/>
+            </div>
+            
             <div className="stat-row">
-                <span> Attack: </span>
+                <span> Atak: </span>
                 <span>{character.attackPoints}</span>
                 <button onClick={() => handleAddStatPoint("ATTACK")}>+</button>
             </div>
 
             <div className="stat-row">
-                <span> Defence: </span>
+                <span> Obrona: </span>
                 <span>{character.defencePoints}</span>
                 <button onClick={() => handleAddStatPoint("DEFENCE")}>+</button>
             </div>
 
             <div className="stat-row">
-                <span> Agility: </span>
+                <span> Szybkość: </span>
                 <span>{character.agilityPoints}</span>
                 <button onClick={() => handleAddStatPoint("AGILITY")}>+</button>
             </div>
 
             <div className="stat-row">
-                <span> Health: </span>
+                <span> Życie: </span>
                 <span>{character.health}</span>
                 <button onClick={() => handleAddStatPoint("HEALTH")}>+</button>
             </div>

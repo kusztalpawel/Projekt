@@ -18,7 +18,7 @@ public class UserMapper {
     }
 
     public static UserResponseDTO toDTO(User user, List<AchievementDTO> achievements) {
-        return new UserResponseDTO(user.getUsername(), user.getPoints(), achievements, allFriendsToDTO(user.getFriends()), CharacterMapper.toDTO(user.getCharacter()));
+        return new UserResponseDTO(user.getUsername(), user.getPoints(), achievements, allFriendsToDTO(user.getFriends()), CharacterMapper.toDTO(user.getCharacter()), user.getLoginStreak(), user.getSkin().getUrl());
     }
 
     public static UserRegisterDTO registerToDTO(User user) {
@@ -30,7 +30,7 @@ public class UserMapper {
     }
 
     public static FriendDTO friendToDTO(User user){
-        return new FriendDTO(user.getUsername(), CharacterMapper.toDTO(user.getCharacter()));
+        return new FriendDTO(user.getUsername(), CharacterMapper.toDTO(user.getCharacter()), user.getSkin().getUrl());
     }
 
     public static List<FriendDTO> allFriendsToDTO(List<User> friends){
@@ -43,6 +43,6 @@ public class UserMapper {
     }
 
     public static AuthResponseDTO authToDTO(String token, User user, List<AchievementDTO> achievements) {
-        return new AuthResponseDTO(token, user.getUsername(), user.getPoints(), achievements, allFriendsToDTO(user.getFriends()), CharacterMapper.toDTO(user.getCharacter()));
+        return new AuthResponseDTO(token, user.getUsername(), user.getPoints(), achievements, allFriendsToDTO(user.getFriends()), CharacterMapper.toDTO(user.getCharacter()), user.getLoginStreak(), user.getSkin().getUrl());
     }
 }

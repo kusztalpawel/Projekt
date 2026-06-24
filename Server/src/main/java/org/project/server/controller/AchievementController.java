@@ -3,9 +3,7 @@ package org.project.server.controller;
 import org.project.server.dto.AchievementDTO;
 import org.project.server.dto.AchievementRequestDTO;
 import org.project.server.mapper.AchievementMapper;
-import org.project.server.mapper.CourseMapper;
 import org.project.server.model.Achievement;
-import org.project.server.model.AchievementMetric;
 import org.project.server.repository.UserRepository;
 import org.project.server.service.AchievementService;
 import org.springframework.http.HttpStatus;
@@ -34,7 +32,12 @@ public class AchievementController {
     }
 
     @GetMapping
-    public ResponseEntity<List<AchievementDTO>> getAllAchievements(Authentication authentication) {
+    public ResponseEntity<List<AchievementDTO>> getAllUserAchievements(Authentication authentication) {
         return ResponseEntity.ok(AchievementMapper.toDTOList(achievementService.getUserAchievements(userRepository.findByUsername(authentication.getName()).orElseThrow())));
+    }
+
+    @GetMapping("/all")
+    public ResponseEntity<List<AchievementDTO>> getAllAchievements(Authentication authentication) {
+        return ResponseEntity.ok(AchievementMapper.achievementsToDTOList(achievementService.getAllAchievements()));
     }
 }

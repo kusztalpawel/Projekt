@@ -1,11 +1,14 @@
 package org.project.server.service;
 
 import org.project.server.dto.UserLoginDTO;
+import org.project.server.dto.UserRankingDTO;
 import org.project.server.dto.UserRegisterDTO;
 import org.project.server.mapper.UserMapper;
 import org.project.server.model.AchievementMetric;
 import org.project.server.model.ProgressEvent;
+import org.project.server.model.Skin;
 import org.project.server.model.User;
+import org.project.server.repository.SkinRepository;
 import org.project.server.repository.UserRepository;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.http.HttpStatus;
@@ -15,6 +18,8 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.server.ResponseStatusException;
 
+import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.List;
 
 @Service
@@ -23,11 +28,13 @@ public class UserService {
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
     private final ApplicationEventPublisher publisher;
+    private final SkinRepository skinRepository;
 
-    public UserService(UserRepository userRepository, PasswordEncoder passwordEncoder, ApplicationEventPublisher publisher) {
+    public UserService(UserRepository userRepository, PasswordEncoder passwordEncoder, ApplicationEventPublisher publisher, SkinRepository skinRepository) {
         this.userRepository = userRepository;
         this.publisher = publisher;
         this.passwordEncoder = passwordEncoder;
+        this.skinRepository = skinRepository;
     }
 
     public User register(UserRegisterDTO dto) {
@@ -38,6 +45,8 @@ public class UserService {
         User user = UserMapper.toEntity(dto);
         user.setPassword(passwordEncoder.encode(user.getPassword()));
         user.setPoints(0);
+        user.setLastLogin(LocalDateTime.now());
+        user.setSkin(skinRepository.findById(1L).orElseThrow(()->new ResponseStatusException(HttpStatus.NOT_FOUND, "Skin Not Found")));
         return userRepository.save(user);
     }
 
@@ -48,7 +57,8 @@ public class UserService {
             throw new BadCredentialsException("Invalid credentials");
         }
 
-        publisher.publishEvent(new ProgressEvent(user.getId(), AchievementMetric.LOGIN_STREAK, user.getLoginStreak()));
+        updateLoginStreak(user);
+        user.setLastLogin(LocalDateTime.now());
 
         return user;
     }
@@ -114,6 +124,45 @@ public class UserService {
             case LOGIN_STREAK-> user.setLoginStreak(user.getLoginStreak() + 1);
             case LEVELS_COMPLETED -> user.setLevelsCompleted(user.getLevelsCompleted() + 1);
             case SKILLPOINTS_USED -> user.setSkillpointsUsed(user.getSkillpointsUsed() + 1);
+        }
+
+        userRepository.save(user);
+    }
+
+    public int getStat(User user, AchievementMetric achievementMetric) {
+        return switch(achievementMetric) {
+            case FRIENDS_COUNT -> user.getFriendsCount() ;
+            case TASKS_COMPLETED -> user.getTasksCompleted();
+            case LOGIN_STREAK-> user.getLoginStreak();
+            case LEVELS_COMPLETED -> user.getLevelsCompleted();
+            case SKILLPOINTS_USED -> user.getSkillpointsUsed();
         };
+    }
+
+    public int checkLoginStreak(User user) {
+        if(user.getLastLogin().plusDays(1).toLocalDate().isEqual(LocalDate.now()))
+            return 1;
+        if(user.getLastLogin().plusDays(1).toLocalDate().isBefore(LocalDate.now()))
+            return 0;
+        return -1;
+    }
+
+    public void updateLoginStreak(User user) {
+        if(checkLoginStreak(user) == 1) {
+            incrementStat(user, AchievementMetric.LOGIN_STREAK);
+            publisher.publishEvent(new ProgressEvent(user.getId(), AchievementMetric.LOGIN_STREAK, user.getLevelsCompleted()));
+        } else if(checkLoginStreak(user) == 0) {
+            user.setLoginStreak(0);
+            userRepository.save(user);
+        }
+    }
+
+    public List<UserRankingDTO> getLeaderboard() {
+        return userRepository.getRanking().stream().map(user -> new UserRankingDTO(user.getUsername(), user.getWins(), user.getLoses())).toList();
+    }
+
+    public void setNewSkin(User user, Skin skin) {
+        user.setSkin(skin);
+        userRepository.save(user);
     }
 }

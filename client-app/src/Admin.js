@@ -1,7 +1,9 @@
 import React, { useState, useEffect } from "react";
+import { Link } from "react-router-dom";
 import useCourses from "./hooks/useCourses";
 import { fetchAchievementMetrics, createAchievement } from "./api/adminApi";
 import "./Login.css";
+import { createTask } from "./api/tasksApi";
 
 const Admin = ({user}) => {
     const token = user?.token;
@@ -13,7 +15,7 @@ const Admin = ({user}) => {
     const { courses, addCourse } = useCourses(token);
     const [ chosenCourse, setChosenCourse] = useState();
 
-    const [taskForm, setTaskForm] = useState({name: ""});
+    const [taskForm, setTaskForm] = useState({name: "", exp: ""});
     const [metrics, setMetrics] = useState();
 
     const createHandleChange = (setState) => (e) => {
@@ -48,6 +50,16 @@ const Admin = ({user}) => {
         }
     }
 
+    const handleAddTask = async () => {
+        try {
+            await createTask(token, taskForm.courseId, taskForm.name, taskForm.exp);
+            setTaskForm({name: "", exp: "", courseId: taskForm.courseId});
+            alert("Task added");
+        } catch (err) {
+            console.error(err);
+        }
+    }
+
     const loadMeta = async () => {
         if (!token) return;
     
@@ -67,7 +79,7 @@ const Admin = ({user}) => {
         <div>
             <div>
                 <h2>Admin Panel</h2>
-                <a className="header-link" href="/">Back</a>
+                <Link to="/">Back</Link>
             </div>
 
             <div>
@@ -96,7 +108,7 @@ const Admin = ({user}) => {
             </div>
             <div>
                 <h4>Tasks</h4>
-                <select name="course" id="course" onChange={handleCourseSet}>
+                <select name="courseId" id={taskForm.courseId} onChange={handleTaskChange}>
                     <option value="">Select course</option>
 
                     {courses.map(course => (
@@ -105,9 +117,9 @@ const Admin = ({user}) => {
                         </option>
                     ))}
                 </select>
-                <input name="name" placeholder="Name" onChange={handleTaskChange} />
-                <input name="points" placeholder="Points" onChange={handleTaskChange} />
-                <button onClick={0}>
+                <input name="name" placeholder="Name" value={taskForm.name} onChange={handleTaskChange} />
+                <input name="exp" placeholder="Experience" value ={taskForm.exp} onChange={handleTaskChange} />
+                <button onClick={handleAddTask}>
                     Add Task
                 </button>
             </div>

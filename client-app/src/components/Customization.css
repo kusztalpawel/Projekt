@@ -1,0 +1,119 @@
+.customization-page {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 30px;
+}
+
+.customization-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+
+    margin-bottom: 30px;
+}
+
+.customization-header h2 {
+    margin: 0;
+    font-size: 32px;
+}
+
+.customization-home {
+    padding: 10px 18px;
+
+    border: none;
+    border-radius: 8px;
+
+    background: white;
+    cursor: pointer;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+}
+
+.customization-home:hover {
+    background: #e5e5e5;
+}
+
+.skins-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+    gap: 24px;
+}
+
+.skin-card {
+    background: white;
+    border-radius: 14px;
+    padding: 16px;
+    text-align: center;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    box-shadow: 0 2px 10px rgba(0,0,0,0.08);
+    position: relative;
+}
+
+.skin-card.chosen {
+    border: 5px solid green;
+}
+
+.skin-card:hover {
+    transform: translateY(-4px);
+}
+
+.skin-card.locked {
+    cursor: unset;
+    opacity: 0.5;
+    background: #ffffff;
+}
+
+.skin-card.locked:hover {
+    transform: none;
+}
+
+.skin-card img {
+    width: 180px;
+    height: 180px;
+
+    object-fit: contain;
+
+    filter: drop-shadow(0 8px 8px rgba(0,0,0,0.15));
+}
+
+.skin-requirement {
+    margin-top: 6px;
+
+    font-size: 14px;
+
+    color: #666;
+}
+
+.skin-selected-badge {
+    position: absolute;
+
+    top: 10px;
+    right: 10px;
+
+    background: #4caf50;
+    color: white;
+
+    padding: 4px 8px;
+
+    border-radius: 6px;
+
+    font-size: 12px;
+    font-weight: bold;
+}
+
+.skin-locked-badge {
+    position: absolute;
+
+    top: 10px;
+    right: 10px;
+
+    background: #666;
+    color: white;
+
+    padding: 4px 8px;
+
+    border-radius: 6px;
+
+    font-size: 12px;
+    font-weight: bold;
+}

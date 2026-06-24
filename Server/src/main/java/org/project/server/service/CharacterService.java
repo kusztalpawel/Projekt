@@ -39,7 +39,7 @@ public class CharacterService {
         character.setAttackPoints(1);
         character.setDefencePoints(1);
         character.setAgilityPoints(1);
-        character.setHealth(100f);
+        character.setHealth(20f);
 
         characterRepository.save(character);
     }
@@ -85,21 +85,30 @@ public class CharacterService {
 
         while(playerHealth > 0 && enemyHealth > 0){
             if(calculateAttacker(playerCharacter.getAgilityPoints(), playerAttackCount, enemyCharacter.getAgilityPoints(), enemyAttackCount)){
-                enemyHealth  -= playerCharacter.getAttackPoints();
-                attacks.add(new Attack(player.getUsername(), calculateDamage(playerCharacter.getAttackPoints(), enemyCharacter.getDefencePoints())));
+                Double damage = calculateDamage(playerCharacter.getAttackPoints(), enemyCharacter.getDefencePoints());
+                enemyHealth  -= damage;
+                attacks.add(new Attack(player.getUsername(), damage));
                 playerAttackCount++;
             } else {
-                playerHealth -= enemyCharacter.getAttackPoints();
-                attacks.add(new Attack(enemy.getUsername(), calculateDamage(enemyCharacter.getAttackPoints(), playerCharacter.getDefencePoints())));
+                Double damage = calculateDamage(enemyCharacter.getAttackPoints(), playerCharacter.getDefencePoints());
+                playerHealth  -= damage;
+                attacks.add(new Attack(enemy.getUsername(), damage));
                 enemyAttackCount++;
             }
         }
 
         if(playerHealth > 0){
             attacks.add(new Attack(player.getUsername(), -1d));
+            player.setWins(player.getWins() + 1);
+            enemy.setLoses(enemy.getLoses() + 1);
         } else {
             attacks.add(new Attack(enemy.getUsername(), -1d));
+            player.setLoses(player.getLoses() + 1);
+            enemy.setWins(enemy.getWins() + 1);
         }
+
+        userRepository.save(player);
+        userRepository.save(enemy);
 
         return attacks;
     }
@@ -109,6 +118,6 @@ public class CharacterService {
     }
 
     private Double calculateDamage(int attack, int defence){
-        return Math.ceil(Math.max(((double) attack / defence), 0d)*100d)/100d;
+        return Math.ceil((0.7 + Math.random() * 0.5) * Math.max(((double) attack / defence), 0d)*100d)/100d;
     }
 }

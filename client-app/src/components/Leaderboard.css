@@ -1,0 +1,85 @@
+.leaderboard-page {
+    margin: 0 auto;
+    padding: 30px;
+}
+
+.leaderboard-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+
+    margin-bottom: 30px;
+}
+
+.leaderboard-header h2 {
+    margin: 0;
+    font-size: 32px;
+}
+
+.leaderboard-back {
+    padding: 10px 18px;
+
+    border: none;
+    border-radius: 8px;
+
+    background: white;
+
+    cursor: pointer;
+
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+.leaderboard-back:hover {
+    background: #e5e5e5;
+}
+
+.leaderboard-list {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+.leaderboard-item {
+    display: grid;
+    grid-template-columns: 80px 1fr 300px;
+
+    align-items: center;
+
+    padding: 16px 20px;
+
+    background: white;
+
+    border-radius: 12px;
+
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+
+    transition: transform 0.15s ease;
+}
+
+.leaderboard-position {
+    font-size: 22px;
+    font-weight: bold;
+}
+
+.leaderboard-name {
+    font-size: 18px;
+    font-weight: 600;
+}
+
+.leaderboard-score {
+    text-align: right;
+
+    font-weight: bold;
+}
+
+.leaderboard-item:first-child {
+    border-left: 12px solid gold;
+}
+
+.leaderboard-item:nth-child(2) {
+    border-left: 12px solid silver;
+}
+
+.leaderboard-item:nth-child(3) {
+    border-left: 12px solid #cd7f32;
+}

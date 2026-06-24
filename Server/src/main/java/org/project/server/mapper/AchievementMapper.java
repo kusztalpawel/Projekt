@@ -16,11 +16,17 @@ public class AchievementMapper {
     }
 
     public static AchievementDTO toDTO(Achievement achievement) {
-        return new AchievementDTO(achievement.getName(), achievement.getDescription(), LocalDateTime.now());
+        return new AchievementDTO(achievement.getName(), achievement.getDescription(), null);
     }
 
     public static List<AchievementDTO> toDTOList(List<UserAchievement> userAchievements) {
         return userAchievements.stream()
+                .map(AchievementMapper::toDTO)
+                .toList();
+    }
+
+    public static List<AchievementDTO> achievementsToDTOList(List<Achievement> achievements) {
+        return achievements.stream()
                 .map(AchievementMapper::toDTO)
                 .toList();
     }

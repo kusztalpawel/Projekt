@@ -43,14 +43,67 @@ export const fetchAddFriend = async (token, friendUsername) => {
     return await res.json();
 };
 
-export const fetchAchievements = async (token) => {
-    const res = await fetch(`${API_URL}/achievements`, {
+export const fetchFriends = async (token) => {
+    const res = await fetch(`${API_URL}/users/friend`, {
+            method: "GET",
+            headers: {
+                Authorization: `Bearer ${token}`
+            }
+        });
+
+    if (!res.ok) {
+        throw new Error("Failed to fetch friends");
+    }
+
+    return await res.json();
+};
+
+export const fetchLeaderboard = async (token) => {
+    const res = await fetch(`${API_URL}/users/leaderboard`, {
         headers: {
             Authorization: `Bearer ${token}`,
         },
     });
 
-    if(!res.ok) {
-        throw new Error("Failed to fetch user achievements");
+    if (!res.ok) {
+        throw new Error("Failed to fetch leaderboard");
     }
-}
+
+    return await res.json();
+};
+
+export const selectSkin = async (token, skinUrl) => {
+    const res = await fetch(
+        `${API_URL}/users/skin/${encodeURIComponent(skinUrl)}`,
+        {
+            method: "POST",
+            headers: {
+                Authorization: `Bearer ${token}`
+            }
+        }
+    );
+
+    if (!res.ok) {
+        throw new Error("Failed to select skin");
+    }
+
+    return res.json();
+};
+
+export const getSkins = async (token) => {
+    const res = await fetch(
+        `${API_URL}/users/skins`,
+        {
+            method: "GET",
+            headers: {
+                Authorization: `Bearer ${token}`
+            }
+        }
+    );
+
+    if (!res.ok) {
+        throw new Error("Failed to fetch skins");
+    }
+
+    return await res.json();
+};

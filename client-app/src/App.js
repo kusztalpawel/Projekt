@@ -20,8 +20,6 @@ function App() {
       setUser(JSON.parse(storedUser));
     }
   }, []);
-  
-  console.log(user);
 
   return (
     <Routes>

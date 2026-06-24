@@ -1,33 +1,28 @@
 import { useState } from "react";
 import "./Friends.css";
-import { fetchAddFriend } from "../api/usersApi";
-import { fightFriend } from "../api/characterApi";
+import { fetchAddFriend, fetchFriends } from "../api/usersApi";
 
-export default function Friends({ token, friends, setFriends }) {
+export default function Friends({ user, setUser, setActiveView, setFriendToFight }) {
     const [friendName, setFriendName] = useState("");
+    const [friends, setFriends] = useState(user?.friends);
 
     const handleAddFriend = async () => {
-        setFriendName("");
+        
         try {
-            const updatedFriends = await fetchAddFriend(token, friendName);
-
+            const updatedFriends = await fetchAddFriend(user?.token, friendName);
+            setFriendName("");
             setFriends(updatedFriends);
-            
+            setUser(prev => ({
+                    ...prev,
+                    friends}));
         } catch(error) {
             console.error(error);
         }
     }
 
-    const handleFight = async (friendUsername) => {
-        try {
-            const fightLog = await fightFriend(token, friendUsername);
-
-            console.log(fightLog);
-            alert("THE Winner is " + fightLog[fightLog.length - 1].username);
-
-        } catch(error) {
-            console.error(error);
-        }
+    const handleFightFriend = async (friend) => {
+        setFriendToFight(friend);
+        setActiveView("arena");
     }
 
     return (
@@ -38,10 +33,7 @@ export default function Friends({ token, friends, setFriends }) {
 
             <div className="friends-list">
                 {friends.map(friend => (
-                    <div
-                        key={friend.id ?? friend.username}
-                        className="friend-item"
-                    >
+                    <div key={friend.id ?? friend.username} className="friend-item">
                         <div>
                             <div className="friend-name">
                                 {friend.username}
@@ -50,8 +42,9 @@ export default function Friends({ token, friends, setFriends }) {
                                 AT: {friend.character.attackPoints} DF: {friend.character.defencePoints} AG: {friend.character.agilityPoints} 
                             </div>
                         </div>
-                        <button
-                            onClick={() => handleFight(friend.username)}>Walcz</button>
+                        <button onClick={() => handleFightFriend(friend)}>
+                            Walcz
+                        </button>
                     </div>
                 ))}
             </div>

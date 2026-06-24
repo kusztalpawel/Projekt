@@ -30,7 +30,7 @@ public class TaskService {
 
         Course course = courseRepository.findById(dto.courseId()).orElseThrow();
 
-        if (!course.getUser().getUsername().equals(username)) {
+        if (course.getUser() != null && !course.getUser().getUsername().equals(username)) {
             throw new ResponseStatusException(HttpStatus.FORBIDDEN);
         }
 

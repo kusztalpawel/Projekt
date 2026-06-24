@@ -2,6 +2,7 @@ package org.project.server.model;
 
 import jakarta.persistence.*;
 
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -36,6 +37,22 @@ public class User {
 
     @Enumerated(EnumType.STRING)
     private UserRole role = UserRole.USER;
+
+    private LocalDateTime lastLogin;
+
+    private int wins;
+    private int loses;
+    @ManyToOne
+    @JoinColumn(name = "skin_id")
+    private Skin skin;
+
+    public Skin getSkin() {
+        return skin;
+    }
+
+    public void setSkin(Skin skin) {
+        this.skin = skin;
+    }
 
     public Long getId() {
         return id;
@@ -132,5 +149,29 @@ public class User {
 
     public void setLevelsCompleted(int levelsCompleted) {
         this.levelsCompleted = levelsCompleted;
+    }
+
+    public LocalDateTime getLastLogin() {
+        return lastLogin;
+    }
+
+    public void setLastLogin(LocalDateTime lastLogin) {
+        this.lastLogin = lastLogin;
+    }
+
+    public int getWins() {
+        return wins;
+    }
+
+    public void setWins(int wins) {
+        this.wins = wins;
+    }
+
+    public int getLoses() {
+        return loses;
+    }
+
+    public void setLoses(int loses) {
+        this.loses = loses;
     }
 }

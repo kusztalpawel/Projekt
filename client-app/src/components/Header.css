@@ -1,0 +1,12 @@
+.achievements-button {
+    background-color: #ffffff;
+    height: 35px;
+    border: none;
+    border-radius: 8px;
+    padding: 10px;
+}
+
+.achievements-button:hover {
+    background-color: #a8a8a8;
+    cursor: pointer;
+}

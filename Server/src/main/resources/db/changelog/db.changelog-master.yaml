@@ -35,3 +35,15 @@ databaseChangeLog:
       file: db/changelog/changes/017-change_courses_name_unique.sql
   - include:
       file: db/changelog/changes/018-change_achievements_table.sql
+  - include:
+      file: db/changelog/changes/019-add_constraint_to_courses.sql
+  - include:
+      file: db/changelog/changes/020-add_last_login_to_users.sql
+  - include:
+      file: db/changelog/changes/021-add_fight_stats_to_user.sql
+  - include:
+      file: db/changelog/changes/022-change_skins_column_in_users.sql
+  - include:
+      file: db/changelog/changes/023-change_skins_column_in_users.sql
+  - include:
+      file: db/changelog/changes/024-change_skins_column_in_users.sql

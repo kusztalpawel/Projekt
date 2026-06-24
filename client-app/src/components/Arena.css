@@ -1,0 +1,223 @@
+.arena-page {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: 100%;
+    padding: 30px;
+}
+
+.arena-header {
+    max-width: 1200px;
+    margin: 0 auto 30px auto;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 50px;
+}
+
+.arena-header h2 {
+    margin: 0;
+    font-size: 32px;
+}
+
+.arena-back {
+    padding: 10px 18px;
+    border: none;
+    border-radius: 8px;
+    background: white;
+    cursor: pointer;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+.arena-back:hover {
+    background: #e5e5e5;
+}
+
+.arena-fight-button {
+    width: 20%;
+    padding: 10px 18px;
+    border: none;
+    border-radius: 8px;
+    background: rgb(139, 101, 58);
+    cursor: pointer;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+.arena-fight-button:hover {
+    background: #e5e5e5;
+}
+
+.arena-content {
+    display: flex;
+    justify-content: center;
+    max-width: 60%;
+    min-height: 70%;
+    background-image: url('/public/arena.png');
+    background-size: 80%;
+    background-position: center;
+    background-repeat: no-repeat;
+    padding-top: 5%;
+    display: flex;
+    position: relative;
+    gap: 20px;
+}
+
+.arena-character {
+    display: flex;
+    position: relative;
+    flex-direction: row;
+    align-items: center;
+    justify-content: center;
+}
+
+.arena-player-image {
+    display: flex;
+    flex-direction: column;
+    align-items: end;
+}
+
+.enemy-image {
+    align-items: start;
+}
+
+.player-image,
+.enemy-img {
+    width: 40%;
+    object-fit: contain;
+    filter: drop-shadow(-5px 30px 10px rgba(0,0,0,0.25));
+}
+
+.enemy-side {
+    flex-direction: row-reverse;
+}
+
+.enemy-img {
+    transform: scaleX(-1);
+}
+
+.enemy-img {
+    transform: scaleX(-1);
+}
+
+.arena-stats {
+    max-width: 250px;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.arena-attack-points,
+.arena-defence-points,
+.arena-agility-points {
+    width: 50px;
+    font-size: 18px;
+    font-weight: bold;
+    margin-bottom: 8px;
+}
+
+.arena-health-container {
+    position: relative;
+    width: 180px;
+    height: 28px;
+    background: #444;
+    border-radius: 14px;
+    overflow: hidden;
+}
+
+.arena-health-fill {
+    height: 100%;
+    background: #b90000;
+    transition: width 0.5s ease;
+}
+
+.arena-health-text {
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%, -50%);
+    color: white;
+    font-weight: bold;
+}
+
+.arena-attack-points {
+    background: #d4f3ff;
+}
+
+.arena-defence-points {
+    background: #fffcd4;
+}
+
+.arena-agility-points {
+    background: #d8ffd8;
+}
+
+.damage {
+    position: absolute;
+    font-size: 32px;
+    font-weight: bold;
+    color: red;
+    right: 10%;
+    top: 50%;
+    pointer-events: none;
+    animation: damageFloat 1s forwards;
+}
+
+.enemy-damage {
+    left: 40%;
+}
+
+@keyframes damageFloat {
+    0% {
+        opacity: 1;
+        transform: translateX(-50%) translateY(0);
+    }
+
+    100% {
+        opacity: 0;
+        transform: translateX(-50%) translateY(-60px);
+    }
+}
+
+.player-attack {
+    animation: playerBash 0.45s ease-in-out;
+}
+
+@keyframes playerBash {
+    0% {
+        transform: translateX(0);
+    }
+
+    35% {
+        transform: translateX(150px) scale(1.05);
+    }
+
+    60% {
+        transform: translateX(100px) scale(1.02);
+    }
+
+    100% {
+        transform: translateX(0);
+    }
+}
+
+.enemy-attack {
+    animation: enemyBash 0.45s ease-in-out;
+}
+
+@keyframes enemyBash {
+    0% {
+        transform: scaleX(-1) translateX(0);
+    }
+
+    35% {
+        transform: scaleX(-1) translateX(150px) scale(1.05);
+    }
+
+    60% {
+        transform: scaleX(-1) translateX(100px) scale(1.02);
+    }
+
+    100% {
+        transform: scaleX(-1) translateX(0);
+    }
+}

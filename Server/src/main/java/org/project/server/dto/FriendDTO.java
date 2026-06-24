@@ -1,4 +1,4 @@
 package org.project.server.dto;
 
-public record FriendDTO(String username, CharacterDTO character) {
+public record FriendDTO(String username, CharacterDTO character, String skinUrl) {
 }

@@ -26,6 +26,7 @@ const Login = ({ setUser }) => {
                 friends: data.friends,
                 character: data.character,
                 role: decoded.role,
+                skin: data.skinUrl
             };
 
             setUser(userData);

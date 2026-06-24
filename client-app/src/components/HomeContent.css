@@ -1,0 +1,143 @@
+.home-content {
+    flex: 1;
+    display: flex;
+    position: relative;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+    padding-right: 50px;
+}
+
+h1 {
+    font-size: 28px;
+    font-weight: 600;
+    padding: 12px;
+    color: white;
+}
+
+.tasks-container {
+    max-width: 600px;
+    min-height: 500px;
+    margin: 40px auto;
+    padding: 10px 15px 0px 15px;
+    background-color: #2e4058;
+    border-radius: 20px;
+    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
+}
+
+.task-input {
+    display: flex;
+    gap: 10px;
+    margin-bottom: 20px;
+}
+
+.task-input input {
+    flex: 1;
+    padding: 10px;
+    font-size: 16px;
+    border: 0;
+    border-radius: 15px;
+}
+
+.task-input button {
+    padding: 10px 20px;
+    cursor: pointer;
+    border: 0;
+    border-radius: 15px;
+}
+
+.task-input button:hover {
+    background-color: #a8a8a8;
+}
+
+.task-list {
+    list-style: none;
+    padding: 0;
+    max-height: 400px;
+    overflow: auto;
+    color: white;
+}
+
+.task {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background: #f3f3f3;
+    padding: 12px;
+    margin-bottom: 10px;
+    border-radius: 8px;
+    background: rgba(255,255,255,0.08);
+}
+
+.task-left {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    cursor: pointer;
+}
+
+.task.done span {
+    text-decoration: line-through;
+    opacity: 0.6;
+}
+
+.delete-btn {
+    background: rgb(129, 0, 0);
+    color: white;
+    border: none;
+    padding: 5px 10px;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+.courses-dropdown {
+    position: relative;
+    padding: 7px 14px;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+    background-color: white;
+    color: black;
+}
+
+.courses-dropdown:hover {
+    background-color: #a8a8a8;
+}
+
+.courses-menu {
+    position: absolute;
+    top: 35px;
+    left: 0;
+    background: white;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    min-width: 180px;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+    overflow: hidden;
+    z-index: 100;
+}
+
+.courses-menu button{
+    display: block;
+    text-align: left;
+    padding: 10px;
+    min-width: 180px;
+    text-decoration: none;
+    color: black;
+    background-color: white;
+    border: 0px;
+}
+
+.courses-menu button:hover {
+    background: #a8a8a8;
+    cursor: pointer;
+}
+
+.courses-menu button.template {
+    color: grey;
+}
+
+.courses-menu button.template:hover {
+    color: black;
+    cursor: pointer;
+}

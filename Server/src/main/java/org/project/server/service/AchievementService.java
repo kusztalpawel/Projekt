@@ -52,12 +52,15 @@ public class AchievementService {
         return userAchievementRepository.findAllByUserId(user.getId());
     }
 
+    public List<Achievement> getAllAchievements() {
+        return achievementRepository.findAll();
+    }
+
     @Transactional
     public void tryAchievementsUnlock(Long userId, AchievementMetric metric, int currentValue) {
         List<Achievement> achievements = achievementRepository.findAllByMetric(metric);
 
         for (Achievement achievement : achievements) {
-            System.out.println(currentValue + " " + achievement.getRequirement());
             if (currentValue >= achievement.getRequirement()) {
                 unlockAchievement(userId, achievement);
             }

@@ -34,3 +34,13 @@
     background-color: #a8a8a8;
     cursor: pointer;
 }
+
+.player-img {
+    width: 100%;
+    transition: transform 0.15s ease;
+}
+
+.player-img:hover {
+    cursor: pointer;
+    transform: translateY(-2px);
+}

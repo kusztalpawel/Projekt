@@ -18,7 +18,7 @@ export const fetchTasks = async (token, selectedCourse) => {
     return await res.json();
 };
 
-export const createTask = async (token, courseId, task) => {
+export const createTask = async (token, courseId, taskName, taskExp) => {
     const res = await fetch(
         `${API_URL}/tasks`,
         {
@@ -28,8 +28,8 @@ export const createTask = async (token, courseId, task) => {
                 Authorization: `Bearer ${token}`,
             },
             body: JSON.stringify({
-                name: task,
-                points: 100,
+                name: taskName,
+                points: taskExp,
                 courseId,
             }),
         }

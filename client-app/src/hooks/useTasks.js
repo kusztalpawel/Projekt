@@ -30,7 +30,8 @@ export default function useTasks(token, selectedCourse, setSelectedCourse, setPo
         const newTask = await createTask(
             token,
             selectedCourse.id,
-            task
+            task,
+            50
         );
 
         setTasks(prev => [...prev, newTask]);
@@ -40,7 +41,7 @@ export default function useTasks(token, selectedCourse, setSelectedCourse, setPo
         const previousLevel = selectedCourse.level;
 
         const updated = await toggleTaskApi(user?.token, id);
-
+        
         setTasks(prev =>prev.map(task => task.id === id ? updated.task : task));
         setSelectedCourse(prev => ({...prev, level: updated.progress.level, experience: updated.progress.experience, experienceNeeded: updated.progress.experienceNeeded}));
 

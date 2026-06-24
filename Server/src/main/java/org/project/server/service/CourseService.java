@@ -9,6 +9,8 @@ import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.List;
 
 @Service
@@ -132,6 +134,8 @@ public class CourseService {
             copy.setName(t.getName());
             copy.setPoints(t.getPoints());
             copy.setCourse(savedCourse);
+            copy.setTime(LocalDate.now());
+            copy.setDone(t.getDone());
 
             taskRepository.save(copy);
         }

@@ -45,4 +45,9 @@ public class UserAchievement {
     public void setUnlockedAt(LocalDateTime unlockedAt) {
         this.unlockedAt = unlockedAt;
     }
+
+    @Override
+    public String toString() {
+        return "UserAchievement [id=" + id + ". user=" + getUser().getUsername() + ", name=" + getAchievement().getName() + ", desc=" + getAchievement().getDescription() + ", unlockedAt=" + unlockedAt + "]";
+    }
 }

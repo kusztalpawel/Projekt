@@ -3,15 +3,20 @@ package org.project.server.controller;
 import org.project.server.JwtUtil;
 import org.project.server.dto.*;
 import org.project.server.mapper.AchievementMapper;
+import org.project.server.mapper.SkinMapper;
 import org.project.server.mapper.UserMapper;
+import org.project.server.model.Skin;
 import org.project.server.model.User;
 import org.project.server.service.AchievementService;
 import org.project.server.service.CharacterService;
+import org.project.server.service.SkinService;
 import org.project.server.service.UserService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.ArrayList;
 import java.util.List;
 
 @RestController
@@ -21,13 +26,15 @@ public class UserController {
     private final UserService userService;
     private final CharacterService characterService;
     private final AchievementService achievementService;
+    private final SkinService skinService;
     private final JwtUtil jwtUtil;
 
-    public UserController(UserService userService, CharacterService characterService,  JwtUtil jwtUtil, AchievementService achievementService) {
+    public UserController(UserService userService, CharacterService characterService, JwtUtil jwtUtil, AchievementService achievementService, SkinService skinService) {
         this.userService = userService;
         this.characterService = characterService;
         this.achievementService = achievementService;
         this.jwtUtil = jwtUtil;
+        this.skinService = skinService;
     }
 
     @PostMapping("/register")
@@ -75,5 +82,29 @@ public class UserController {
     @GetMapping("/friend")
     public ResponseEntity<List<FriendDTO>> getFriends(Authentication authentication) {
         return ResponseEntity.ok(UserMapper.allFriendsToDTO((userService.getFriends(authentication.getName()))));
+    }
+
+    @GetMapping("/leaderboard")
+    public ResponseEntity<List<UserRankingDTO>> getLeaderboard() {
+        return ResponseEntity.ok(userService.getLeaderboard());
+    }
+
+    @PostMapping("/skin/{skinUrl}")
+    public ResponseEntity<SkinDTO> getALlSkins(Authentication authentication,  @PathVariable String skinUrl) {
+        User user = userService.getByUsername(authentication.getName());
+        Skin newSkin = skinService.getByUrl(skinUrl);
+        userService.setNewSkin(user, newSkin);
+        return ResponseEntity.ok(SkinMapper.toDTO(newSkin, true));
+    }
+
+    @GetMapping("/skins")
+    public ResponseEntity<List<SkinDTO>> getALlSkins(Authentication authentication) {
+        User user = userService.getByUsername(authentication.getName());
+        List<SkinDTO> skinDTOs = new ArrayList<>();
+        for(Skin skin : skinService.getAllSkins()){
+            skinDTOs.add(SkinMapper.toDTO(skin, skinService.isUnlocked(user, skin)));
+        }
+
+        return ResponseEntity.ok(skinDTOs);
     }
 }
