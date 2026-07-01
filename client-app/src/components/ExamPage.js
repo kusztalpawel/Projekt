@@ -3,6 +3,7 @@ import { joinExam, fetchPowerUps, buyPowerUp } from "../api/examsApi";
 import { getExamHistory, fetchUserProgress } from "../api/usersApi";
 import { useNavigate } from "react-router-dom";
 import { GiTwoCoins } from "react-icons/gi";
+import { toast } from "react-toastify";
 
 import "./ExamPage.css";
 
@@ -43,7 +44,7 @@ const ExamPage = ({ user, setCurrentExamAttempt, setActiveView, powerUps, setPow
             setPowerUps(update);
             handleupdateCoins();
         } catch (err) {
-            console.error(err);
+            toast.error(err.message);
         }
     };
 
@@ -53,7 +54,7 @@ const ExamPage = ({ user, setCurrentExamAttempt, setActiveView, powerUps, setPow
             setCurrentExamAttempt(exam);
             setActiveView("exam");
         } catch (err) {
-            alert(err.message);
+            toast.error(err.message);
         }
     };
 
