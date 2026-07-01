@@ -15,7 +15,7 @@ export default function Levels({ currentLevel, currentExperience, experienceNeed
                             className={`level-node ${level % 2 === 1 ? "odd" : "even"} ${i === 0 ? "current-level" : ""}`}
                         >
                             <div className="level-number">
-                                LVL {level}
+                                POZIOM {level}
                             </div>
 
                             <div className="xp-bar">

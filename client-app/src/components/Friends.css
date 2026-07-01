@@ -1,20 +1,21 @@
 .friends-drawer {
-    top: 0;
     right: 0;
     width: 75px;
-    min-height: 100%;
+    position: fixed;
+    height: 100vh;
     background: #2e4058;
     color: rgba(255,255,255,0.0);
     overflow: hidden;
     transition: width 0.3s ease;
     display: flex;
     flex-direction: column;
-    position: absolute;
     z-index: 1000;
+    transition: width .3s ease;
+    font-family: 'Inter', sans-serif;
 }
 
 .friends-drawer:hover {
-    width: 300px;
+    width: 350px;
     color: white;
 }
 
@@ -31,13 +32,20 @@
 .friends-list {
     flex: 1;
     padding: 12px;
+    max-height: 70vh;
+    overflow-y: hidden;
+    overflow-x: hidden;
+}
+
+.friends-list:hover {
+    overflow-y: auto;
 }
 
 .friend-item {
     display: flex;
     align-items: center;
     justify-content: space-around;
-    padding: 5%;
+    padding-right: 5%;
     margin-bottom: 8px;
     border-radius: 10px;
     background: rgba(255,255,255,0.08);
@@ -125,4 +133,21 @@
 
 .friend-stats {
     font-size: 12px;
+}
+
+.friend-data {
+    display: flex;
+    align-items: center;
+}
+
+.friend-icon {
+    width: 100%;
+}
+
+.friends-drawer:hover .friend-icon {
+    width: 35%;
+}
+
+.sticky-drawer {
+    position: sticky;
 }

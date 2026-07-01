@@ -6,6 +6,7 @@
     align-items: center;
     text-align: center;
     padding-right: 50px;
+    font-family: 'Inter', sans-serif;
 }
 
 h1 {
@@ -13,81 +14,6 @@ h1 {
     font-weight: 600;
     padding: 12px;
     color: white;
-}
-
-.tasks-container {
-    max-width: 600px;
-    min-height: 500px;
-    margin: 40px auto;
-    padding: 10px 15px 0px 15px;
-    background-color: #2e4058;
-    border-radius: 20px;
-    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
-}
-
-.task-input {
-    display: flex;
-    gap: 10px;
-    margin-bottom: 20px;
-}
-
-.task-input input {
-    flex: 1;
-    padding: 10px;
-    font-size: 16px;
-    border: 0;
-    border-radius: 15px;
-}
-
-.task-input button {
-    padding: 10px 20px;
-    cursor: pointer;
-    border: 0;
-    border-radius: 15px;
-}
-
-.task-input button:hover {
-    background-color: #a8a8a8;
-}
-
-.task-list {
-    list-style: none;
-    padding: 0;
-    max-height: 400px;
-    overflow: auto;
-    color: white;
-}
-
-.task {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    background: #f3f3f3;
-    padding: 12px;
-    margin-bottom: 10px;
-    border-radius: 8px;
-    background: rgba(255,255,255,0.08);
-}
-
-.task-left {
-    display: flex;
-    align-items: center;
-    gap: 10px;
-    cursor: pointer;
-}
-
-.task.done span {
-    text-decoration: line-through;
-    opacity: 0.6;
-}
-
-.delete-btn {
-    background: rgb(129, 0, 0);
-    color: white;
-    border: none;
-    padding: 5px 10px;
-    border-radius: 5px;
-    cursor: pointer;
 }
 
 .courses-dropdown {

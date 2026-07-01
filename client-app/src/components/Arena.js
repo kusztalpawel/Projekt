@@ -1,22 +1,23 @@
 import { fightFriend } from "../api/characterApi";
 import { useState, useRef, useEffect } from "react";
-import { fetchFriends } from "../api/usersApi";
+import { fetchFriends, fetchUserProgress } from "../api/usersApi";
+import { toast } from "react-toastify";
 import "./Arena.css";
 const API_URL = "http://localhost:8080";
 
-const Arena = ({ user, setUser, character, friend, setActiveView }) => {
+const Arena = ({ user, setUser, character, friend, setActiveView, setCoins }) => {
     const playerMaxHP = character.health;
     const enemyMaxHP = friend.character.health;
 
     const [playerHP, setPlayerHP] = useState(character.health);
     const [enemyHP, setEnemyHP] = useState(friend.character.health);
-    const [playerAttacking, setPlayerAttacking] = useState(false); 
-    const [enemyAttacking, setEnemyAttacking] = useState(false); 
+    const [playerAttacking, setPlayerAttacking] = useState(false);
+    const [enemyAttacking, setEnemyAttacking] = useState(false);
     const [damageText, setDamageText] = useState(null);
-    const [skin, setSkin] = useState(user?.skin);
-    const [enemySkin, setEnemySkin] = useState(friend.skinUrl);
+    const [fightResult, setFightResult] = useState(null);
+    const [areFighting, setAreFighting] = useState(false);
     const fightCancelled = useRef(false);
-    
+
     useEffect(() => {
         const loadFriends = async () => {
             const friends = await fetchFriends(user?.token);
@@ -25,8 +26,6 @@ const Arena = ({ user, setUser, character, friend, setActiveView }) => {
                 ...prev,
                 friends
             }));
-
-            setEnemySkin(friends.find(user => user.username === friend.username).skinUrl);
         };
 
         loadFriends();
@@ -41,18 +40,33 @@ const Arena = ({ user, setUser, character, friend, setActiveView }) => {
     }, []);
 
     const handleFight = async () => {
-        try {
-            const fightLog = await fightFriend(user?.token, friend.username);
-            setPlayerHP(character.health);
-            setEnemyHP(friend.character.health);
-            playFight(fightLog);
-        } catch(error) {
-            console.error(error);
+        if(!areFighting){
+            try {
+                const fightLog = await fightFriend(user?.token, friend.username);
+                setAreFighting(true);
+                setPlayerHP(character.health);
+                setEnemyHP(friend.character.health);
+                playFight(fightLog);
+                handleupdateCoins();
+            } catch (error) {
+                toast.error(error.message);
+            }
+        } else {
+            toast.error("Już toczysz walkę!")
         }
     };
 
     const sleep = (ms) =>
         new Promise(resolve => setTimeout(resolve, ms));
+
+    const handleupdateCoins = async () => {
+        try {
+            const update = await fetchUserProgress(user?.token);
+            setCoins(update.powerCoins);
+        } catch (error) {
+            console.error(error);
+        }
+    };
 
     const playFight = async (fightLog) => {
         for (const turn of fightLog) {
@@ -60,10 +74,17 @@ const Arena = ({ user, setUser, character, friend, setActiveView }) => {
                 return;
             }
 
+            
             if (turn.damage === -1) {
-                alert(`${turn.username} wins!`);
+                setFightResult({
+                    winner: turn.username
+                });
+                setPlayerHP(character.health);
+                setEnemyHP(friend.character.health);
+                setAreFighting(false);
                 break;
             }
+            
 
             if (turn.username === user.username) {
                 setPlayerAttacking(true);
@@ -128,20 +149,20 @@ const Arena = ({ user, setUser, character, friend, setActiveView }) => {
                     </div>
                     <div className="arena-player-image">
                         <div className="arena-health-container">
-                            <div className="arena-health-fill" style={{ width: `${Math.max(0,(playerHP/playerMaxHP)) * 100}%` }}/>
+                            <div className="arena-health-fill" style={{ width: `${Math.max(0, (playerHP / playerMaxHP)) * 100}%` }} />
                             <span className="arena-health-text">
                                 {playerHP.toFixed(2)} HP
                             </span>
                         </div>
-                        <img className={`player-image ${playerAttacking ? "player-attack" : ""}`} src={`${API_URL}/images/skins/${skin}`} alt=""/>
+                        <img className={`player-image ${playerAttacking ? "player-attack" : ""}`} src={`${API_URL}/images/skins/${user.skin}`} alt="" />
                         {damageText?.target === "player" && (
-                            <div  key={damageText.id} className="damage">
+                            <div key={damageText.id} className="damage">
                                 -{damageText.value}
                             </div>
                         )}
                     </div>
                 </div>
-                
+
                 <div className="arena-character enemy-side">
                     <div className="arena-stats">
                         <h2>
@@ -159,14 +180,14 @@ const Arena = ({ user, setUser, character, friend, setActiveView }) => {
                     </div>
                     <div className="arena-player-image enemy-image">
                         <div className="arena-health-container">
-                            <div className="arena-health-fill" style={{ width: `${(enemyHP/enemyMaxHP) * 100}%` }}/>
+                            <div className="arena-health-fill" style={{ width: `${(enemyHP / enemyMaxHP) * 100}%` }} />
                             <span className="arena-health-text">
                                 {enemyHP.toFixed(2)} HP
                             </span>
                         </div>
-                        <img className={`enemy-img ${enemyAttacking ? "enemy-attack" : ""}`} src={`${API_URL}/images/skins/${enemySkin}`} alt=""/>
+                        <img className={`enemy-img ${enemyAttacking ? "enemy-attack" : ""}`} src={`${API_URL}/images/skins/${friend.skinUrl}`} alt="" />
                         {damageText?.target === "enemy" && (
-                            <div  key={damageText.id} className="damage enemy-damage">
+                            <div key={damageText.id} className="damage enemy-damage">
                                 -{damageText.value}
                             </div>
                         )}
@@ -176,6 +197,34 @@ const Arena = ({ user, setUser, character, friend, setActiveView }) => {
             <button className="arena-fight-button" onClick={() => handleFight()}>
                 Zacznij walkę
             </button>
+            {fightResult && (
+                <div className="fight-result-overlay">
+                    <div className="fight-result-modal">
+                        {fightResult.winner === user.username 
+                        ? 
+                        <div className="win">
+                            ZWYCIĘSTWO!
+                            <div className="result-subtitle">
+                                Udało Ci się pokonać {friend.username}!
+                            </div>
+                        </div> 
+                        : 
+                        <div className="lose">
+                            PORAŻKA!
+                            <div className="result-subtitle">
+                                {friend.username} pokonał Cię.
+                            </div>
+                        </div>}
+
+                        <button
+                            onClick={() => setFightResult(null)}
+                        >
+                            Okej
+                        </button>
+
+                    </div>
+                </div>
+            )}
         </div>
     );
 };

@@ -10,7 +10,7 @@ export const fetchCourses = async (token) => {
     });
 
     if (!res.ok) {
-        throw new Error("Failed to fetch courses");
+        throw new Error(await res.text());
     }
 
     return await res.json();
@@ -26,7 +26,7 @@ export const fetchAllCourses = async (token) => {
     });
 
     if (!res.ok) {
-        throw new Error("Failed to fetch courses");
+        throw new Error(await res.text());
     }
 
     return await res.json();
@@ -45,7 +45,7 @@ export const createCourse = async (token, courseName) => {
     });
 
     if (!res.ok) {
-        throw new Error("Failed to create course");
+        throw new Error(await res.text());
     }
 
     return await res.json();
@@ -61,7 +61,7 @@ export const fetchCourseTemplates = async (token) => {
     });
 
     if (!res.ok) {
-        throw new Error("Failed to fetch templates");
+        throw new Error(await res.text());
     }
 
     return await res.json();
@@ -77,7 +77,7 @@ export const enroll = async (token, courseId) => {
     });
 
     if (!res.ok) {
-        throw new Error("Failed to enroll in course");
+        throw new Error(await res.text());
     }
 
     return await res.json();

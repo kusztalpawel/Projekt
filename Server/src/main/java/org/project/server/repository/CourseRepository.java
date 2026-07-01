@@ -13,4 +13,5 @@ public interface CourseRepository extends JpaRepository<Course, Long>{
     List<Course> findByUserIsNull();
     boolean existsByUserAndName(User user, String name);
     Course findByUserAndName(User user, String name);
+    boolean existsByUserIsNullAndName(String name);
 }

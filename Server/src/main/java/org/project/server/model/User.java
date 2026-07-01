@@ -46,6 +46,8 @@ public class User {
     @JoinColumn(name = "skin_id")
     private Skin skin;
 
+    private Integer powerCoins;
+
     public Skin getSkin() {
         return skin;
     }
@@ -173,5 +175,13 @@ public class User {
 
     public void setLoses(int loses) {
         this.loses = loses;
+    }
+
+    public Integer getPowerCoins() {
+        return powerCoins;
+    }
+
+    public void setPowerCoins(Integer powerCoins) {
+        this.powerCoins = powerCoins;
     }
 }

@@ -1,6 +1,11 @@
 import "./Character.css";
 import { addStatPoint } from "../api/characterApi";
 import { fetchUserProgress } from "../api/usersApi";
+import { TbSwords, TbShieldFilled, TbHeartFilled } from "react-icons/tb";
+import { GiWingfoot } from "react-icons/gi";
+import { FaPlusCircle } from "react-icons/fa";
+import { toast } from "react-toastify";
+
 const API_URL = "http://localhost:8080";
 
 export default function Character({ user, character, setCharacter, points, setPoints, setActiveView }) {
@@ -13,9 +18,11 @@ export default function Character({ user, character, setCharacter, points, setPo
                 setCharacter(updatedCharacter);
                 setPoints(updatedPoints.points);
             } catch (error) {
-                console.error(error);
+                toast.error(error.message);
             }
-        } 
+        } else {
+            toast.error("Niewystarczająca liczba punktów!");
+        }
     }
 
     return (
@@ -26,27 +33,27 @@ export default function Character({ user, character, setCharacter, points, setPo
             </div>
             
             <div className="stat-row">
-                <span> Atak: </span>
+                <span> <TbSwords /> ATAK</span>
                 <span>{character.attackPoints}</span>
-                <button onClick={() => handleAddStatPoint("ATTACK")}>+</button>
+                <FaPlusCircle className="plusIcon" onClick={() => handleAddStatPoint("ATTACK")}/>
             </div>
 
             <div className="stat-row">
-                <span> Obrona: </span>
+                <span> <TbShieldFilled /> OBRONA</span>
                 <span>{character.defencePoints}</span>
-                <button onClick={() => handleAddStatPoint("DEFENCE")}>+</button>
+                <FaPlusCircle className="plusIcon" onClick={() => handleAddStatPoint("DEFENCE")}/>
             </div>
 
             <div className="stat-row">
-                <span> Szybkość: </span>
+                <span> <GiWingfoot /> SZYBKOŚĆ </span>
                 <span>{character.agilityPoints}</span>
-                <button onClick={() => handleAddStatPoint("AGILITY")}>+</button>
+                <FaPlusCircle className="plusIcon" onClick={() => handleAddStatPoint("AGILITY")}/>
             </div>
 
             <div className="stat-row">
-                <span> Życie: </span>
+                <span> <TbHeartFilled /> PUNKTY ŻYCIA</span>
                 <span>{character.health}</span>
-                <button onClick={() => handleAddStatPoint("HEALTH")}>+</button>
+                <FaPlusCircle className="plusIcon" onClick={() => handleAddStatPoint("HEALTH")}/>
             </div>
         </div>
     );

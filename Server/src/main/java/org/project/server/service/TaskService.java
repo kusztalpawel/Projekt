@@ -25,13 +25,16 @@ public class TaskService {
     }
 
     public Task createTask(TaskRequestDTO dto, String username) {
+        if (!dto.name().matches("[A-Za-z0-9]+")) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST ,"Name may contain only letters and numbers.");
+        }
 
         Task task = TaskMapper.toEntity(dto);
 
         Course course = courseRepository.findById(dto.courseId()).orElseThrow();
 
         if (course.getUser() != null && !course.getUser().getUsername().equals(username)) {
-            throw new ResponseStatusException(HttpStatus.FORBIDDEN);
+            throw new ResponseStatusException(HttpStatus.FORBIDDEN, "Forbidden");
         }
 
         task.setTime(LocalDate.now());
@@ -54,7 +57,7 @@ public class TaskService {
         Course course = courseRepository.findById(id).orElseThrow(() -> new RuntimeException("Course not found"));
 
         if (!course.getUser().getUsername().equals(name)) {
-            throw new ResponseStatusException(HttpStatus.FORBIDDEN);
+            throw new ResponseStatusException(HttpStatus.FORBIDDEN, "Forbidden");
         }
 
         return taskRepository.findByCourseId(id);
@@ -64,7 +67,7 @@ public class TaskService {
         Task task = taskRepository.findById(id).orElseThrow(() -> new RuntimeException("Task not found"));
 
         if(!task.getCourse().getUser().getUsername().equals(username)) {
-            throw new ResponseStatusException(HttpStatus.FORBIDDEN);
+            throw new ResponseStatusException(HttpStatus.FORBIDDEN, "Forbidden");
         }
 
         task.setName(dto.name());
@@ -80,7 +83,7 @@ public class TaskService {
                 .orElseThrow(() -> new RuntimeException("Task not found"));
 
         if(!task.getCourse().getUser().getUsername().equals(username)) {
-            throw new ResponseStatusException(HttpStatus.FORBIDDEN);
+            throw new ResponseStatusException(HttpStatus.FORBIDDEN, "Forbidden");
         }
 
         task.setDone(!task.getDone());
@@ -92,7 +95,7 @@ public class TaskService {
         Task task = taskRepository.findById(id).orElseThrow(() -> new RuntimeException("Task not found"));
 
         if(!task.getCourse().getUser().getUsername().equals(username)) {
-            throw new ResponseStatusException(HttpStatus.FORBIDDEN);
+            throw new ResponseStatusException(HttpStatus.FORBIDDEN, "Forbidden");
         }
 
         taskRepository.deleteById(id);

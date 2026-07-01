@@ -1,20 +1,38 @@
 import { useState } from "react";
 import useTasks from "../hooks/useTasks.js";
+import { HiTrash } from "react-icons/hi2";
+import { toast } from "react-toastify";
+import "./Tasks.css";
 
 export default function Tasks({ user, setPoints, selectedCourse, setSelectedCourse }) {
-    const [newTask, setNewTask] = useState("");
     const { tasks, addTask, toggleTask, deleteTask } = useTasks(user?.token, selectedCourse, setSelectedCourse, setPoints);
+    const DIFFICULTY_EXP = {
+        EASY: 50,
+        MEDIUM: 100,
+        HARD: 200
+    };
+    const alphaNumericRegex = /^[A-Za-z0-9]+$/;
+
+    const [newTask, setNewTask] = useState({name: "", exp: DIFFICULTY_EXP.EASY});
 
     const handleAddTask = async () => {
         if (!selectedCourse) {
-            alert("Wybierz kurs");
+            toast.error("Najpierw wybierz kurs!");
             return;
         }
 
-        if (!newTask.trim()) return;
+        if (!newTask.name.trim()) {
+            toast.error("Podaj nazwę zadania");
+            return;
+        }
 
-        await addTask(user?.token, newTask);
-        setNewTask("");
+        if (!alphaNumericRegex.test(newTask.name)) {
+            toast.error("Zadanie powinno zawierać tylko litery lub cyfry.");
+            return;
+        }
+
+        await addTask(user?.token, newTask.name, newTask.exp);
+        setNewTask({name: "", exp: DIFFICULTY_EXP.EASY});
     };
 
     const handleToggleTask = (id) => {
@@ -33,11 +51,18 @@ export default function Tasks({ user, setPoints, selectedCourse, setSelectedCour
                 <input
                     type="text"
                     placeholder="Dodaj nowe zadanie..."
-                    value={newTask}
-                    onChange={(e) =>
-                        setNewTask(e.target.value)
-                    }
+                    value={newTask.name}
+                    onChange={(e) => setNewTask({name: e.target.value, exp: newTask.exp})}
                 />
+                <select
+                    name="difficulty"
+                    value={newTask.exp}
+                    onChange={(e) => setNewTask({name: newTask.name, exp: e.target.value})}
+                >
+                    <option value={DIFFICULTY_EXP.EASY}>Easy</option>
+                    <option value={DIFFICULTY_EXP.MEDIUM}>Medium</option>
+                    <option value={DIFFICULTY_EXP.HARD}>Hard</option>
+                </select>
 
                 <button onClick={handleAddTask}>
                     Dodaj
@@ -57,19 +82,16 @@ export default function Tasks({ user, setPoints, selectedCourse, setSelectedCour
                             <span className="task-name">
                                 {task.name}
                             </span>
+                            
+                        </div>
+                        <div className="task-right">
                             <span className="task-points">
                                 {task.points} EXP
                             </span>
+                            <button className="delete-btn" onClick={() => handleDeleteTask(task.id)}>
+                                <HiTrash />
+                            </button>
                         </div>
-
-                        <button
-                            className="delete-btn"
-                            onClick={() =>
-                                handleDeleteTask(task.id)
-                            }
-                        >
-                            X
-                        </button>
                     </li>
                 ))}
             </ul>

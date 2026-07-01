@@ -12,7 +12,7 @@ export const fetchTasks = async (token, selectedCourse) => {
     );
 
     if (!res.ok) {
-        throw new Error("Failed to fetch tasks");
+        throw new Error(await res.text());
     }
 
     return await res.json();
@@ -35,6 +35,10 @@ export const createTask = async (token, courseId, taskName, taskExp) => {
         }
     );
 
+    if (!res.ok) {
+        throw new Error(await res.text());
+    }
+
     return await res.json();
 };
 
@@ -50,7 +54,7 @@ export const toggleTaskApi = async (token, taskId) => {
     );
 
     if(!res.ok){
-        throw new Error("Failed to update task");
+        throw new Error(await res.text());
     }
 
     return await res.json();
@@ -68,6 +72,6 @@ export const deleteTaskApi = async (token, taskId) => {
     );
 
     if(!res.ok){
-        throw new Error("Failed to delete task");
+        throw new Error(await res.text());
     }
 };

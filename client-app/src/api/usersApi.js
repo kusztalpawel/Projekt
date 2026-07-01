@@ -8,7 +8,7 @@ export const fetchUserLogin = async (username, password) => {
     });
 
     if (!res.ok) {
-        throw new Error(res.message || "Login failed");
+        throw new Error(await res.text());
     }
 
     return await res.json();
@@ -22,7 +22,7 @@ export const fetchUserProgress = async (token) => {
     });
 
     if (!res.ok) {
-        throw new Error("Failed to fetch user progress");
+        throw new Error(await res.text());
     }
 
     return await res.json();
@@ -37,7 +37,7 @@ export const fetchAddFriend = async (token, friendUsername) => {
         });
 
     if (!res.ok) {
-        throw new Error("Failed to add friend");
+        throw new Error(await res.text());
     }
 
     return await res.json();
@@ -52,7 +52,7 @@ export const fetchFriends = async (token) => {
         });
 
     if (!res.ok) {
-        throw new Error("Failed to fetch friends");
+        throw new Error(await res.text());
     }
 
     return await res.json();
@@ -66,7 +66,7 @@ export const fetchLeaderboard = async (token) => {
     });
 
     if (!res.ok) {
-        throw new Error("Failed to fetch leaderboard");
+        throw new Error(await res.text());
     }
 
     return await res.json();
@@ -84,7 +84,7 @@ export const selectSkin = async (token, skinUrl) => {
     );
 
     if (!res.ok) {
-        throw new Error("Failed to select skin");
+        throw new Error(await res.text());
     }
 
     return res.json();
@@ -102,8 +102,22 @@ export const getSkins = async (token) => {
     );
 
     if (!res.ok) {
-        throw new Error("Failed to fetch skins");
+        throw new Error(await res.text());
     }
 
     return await res.json();
+};
+
+export const getExamHistory = async (token) => {
+    const res = await fetch(`${API_URL}/exams/history`, {
+        headers: {
+            Authorization: `Bearer ${token}`
+        }
+    });
+
+    if (!res.ok) {
+        throw new Error(await res.text());
+    }
+
+    return res.json();
 };

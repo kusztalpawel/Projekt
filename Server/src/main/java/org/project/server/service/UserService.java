@@ -12,7 +12,6 @@ import org.project.server.repository.SkinRepository;
 import org.project.server.repository.UserRepository;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.http.HttpStatus;
-import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -42,19 +41,28 @@ public class UserService {
             throw new ResponseStatusException(HttpStatus.CONFLICT, "Username already exists");
         }
 
+        if (!dto.username().matches("[A-Za-z0-9]+")) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST ,"Username may contain only letters and numbers.");
+        }
+
+        if (!dto.password().matches("[A-Za-z0-9]+")) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST ,"Password may contain only letters and numbers.");
+        }
+
         User user = UserMapper.toEntity(dto);
         user.setPassword(passwordEncoder.encode(user.getPassword()));
         user.setPoints(0);
         user.setLastLogin(LocalDateTime.now());
-        user.setSkin(skinRepository.findById(1L).orElseThrow(()->new ResponseStatusException(HttpStatus.NOT_FOUND, "Skin Not Found")));
+        user.setSkin(skinRepository.findById(1L).orElseThrow(()->new RuntimeException("Skin Not Found")));
+        user.setPowerCoins(0);
         return userRepository.save(user);
     }
 
     public User login(UserLoginDTO dto) {
-        User user = userRepository.findByUsername(dto.username()).orElseThrow(() -> new RuntimeException("User not found"));
+        User user = userRepository.findByUsername(dto.username()).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "User not found"));
 
         if (!passwordEncoder.matches(dto.password(), user.getPassword())) {
-            throw new BadCredentialsException("Invalid credentials");
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Invalid credentials");
         }
 
         updateLoginStreak(user);
@@ -80,18 +88,22 @@ public class UserService {
 
     @Transactional
     public void addFriend(String username, String friendUsername) {
+        if (!friendUsername.matches("[A-Za-z0-9]+")) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST ,"Course name may contain only letters and numbers.");
+        }
+
         if (username.equals(friendUsername)) {
-            throw new IllegalArgumentException("Cannot add yourself as friend");
+            throw new ResponseStatusException(HttpStatus.FORBIDDEN ,"Cannot add yourself as friend");
         }
 
         User user = userRepository.findByUsername(username)
                 .orElseThrow(() -> new RuntimeException("User not found"));
 
         User friend = userRepository.findByUsername(friendUsername)
-                .orElseThrow(() -> new RuntimeException("Friend not found"));
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.BAD_REQUEST ,"Friend not found"));
 
         if (user.getFriends().contains(friend)) {
-            return;
+            throw new ResponseStatusException(HttpStatus.FORBIDDEN ,"This user is already your friend");
         }
 
         user.getFriends().add(friend);

@@ -37,7 +37,7 @@ const Customization = ({ user, setUser, setActiveView }) => {
         <div className="customization-page">
 
             <div className="customization-header">
-                <h2>Customization</h2>
+                <h2>Wybór postaci</h2>
 
                 <button
                     className="customization-home"

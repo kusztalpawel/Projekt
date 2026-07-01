@@ -2,16 +2,8 @@
     min-height: 100vh;
     display: flex;
     flex-direction: column;
-    font-family: Arial, sans-serif;
     background-color: #f3f4f6;
-}
-
-header {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    padding: 16px 24px;
-    background-color: #1f2937;
+    font-family: 'Inter', sans-serif;
 }
 
 .logo {
@@ -152,6 +144,23 @@ h1 {
     justify-content: flex-end;
 }
 
+.modal button {
+    background-color: rgb(186, 218, 255);
+    border: none;
+    border-radius: 7px;
+    width: 50px;
+    height: 25px;
+}
+
+.modal button:hover {
+    background-color: rgb(123, 157, 197);
+    cursor: pointer;
+}
+
 .no-login-text {
     margin-top: 45vh;
+}
+
+button {
+    font-family: 'Inter', sans-serif;
 }

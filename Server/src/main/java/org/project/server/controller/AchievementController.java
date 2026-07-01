@@ -33,7 +33,8 @@ public class AchievementController {
 
     @GetMapping
     public ResponseEntity<List<AchievementDTO>> getAllUserAchievements(Authentication authentication) {
-        return ResponseEntity.ok(AchievementMapper.toDTOList(achievementService.getUserAchievements(userRepository.findByUsername(authentication.getName()).orElseThrow())));
+        return ResponseEntity.ok(AchievementMapper.toDTOList(achievementService
+                .getUserAchievements(userRepository.findByUsername(authentication.getName()).orElseThrow())));
     }
 
     @GetMapping("/all")

@@ -3,6 +3,7 @@ package org.project.server.service;
 import org.project.server.model.*;
 import org.project.server.model.Character;
 import org.project.server.repository.CharacterRepository;
+import org.project.server.repository.UserFriendRepository;
 import org.project.server.repository.UserRepository;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.http.HttpStatus;
@@ -10,6 +11,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.server.ResponseStatusException;
 
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -19,12 +21,14 @@ public class CharacterService {
     private final UserRepository userRepository;
     private final UserService userService;
     private final ApplicationEventPublisher publisher;
+    private final UserFriendRepository userFriendRepository;
 
-    public CharacterService(CharacterRepository characterRepository, UserRepository userRepository, UserService userService, ApplicationEventPublisher publisher) {
+    public CharacterService(CharacterRepository characterRepository, UserRepository userRepository, UserService userService, ApplicationEventPublisher publisher, UserFriendRepository userFriendRepository) {
         this.characterRepository = characterRepository;
         this.userRepository = userRepository;
         this.userService = userService;
         this.publisher = publisher;
+        this.userFriendRepository = userFriendRepository;
     }
 
     public Character getCharacter(Long id){
@@ -71,9 +75,16 @@ public class CharacterService {
         return character;
     }
 
-    public List<Attack> duel(String usernameId, String friendUsernameId){
-        User player = userRepository.findByUsername(usernameId).orElseThrow();
-        User enemy = userRepository.findByUsername(friendUsernameId).orElseThrow();
+    public List<Attack> duel(String username, String friendUsername){
+        User player = userRepository.findByUsername(username).orElseThrow();
+        User enemy = userRepository.findByUsername(friendUsername).orElseThrow();
+
+        LocalDate lastFight = userFriendRepository.getLastFight(player.getId(), enemy.getId());
+
+        if (LocalDate.now().equals(lastFight)) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "You already fought this friend today.");
+        }
+
         Character playerCharacter = player.getCharacter();
         Character enemyCharacter = enemy.getCharacter();
 
@@ -100,15 +111,18 @@ public class CharacterService {
         if(playerHealth > 0){
             attacks.add(new Attack(player.getUsername(), -1d));
             player.setWins(player.getWins() + 1);
+            player.setPowerCoins(player.getPowerCoins() + 1);
             enemy.setLoses(enemy.getLoses() + 1);
         } else {
             attacks.add(new Attack(enemy.getUsername(), -1d));
             player.setLoses(player.getLoses() + 1);
             enemy.setWins(enemy.getWins() + 1);
+            enemy.setPowerCoins(enemy.getPowerCoins() + 1);
         }
 
         userRepository.save(player);
         userRepository.save(enemy);
+        userFriendRepository.updateLastFight(player.getId(), enemy.getId(), LocalDate.now());
 
         return attacks;
     }

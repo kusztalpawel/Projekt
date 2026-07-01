@@ -6,11 +6,12 @@ import org.project.server.repository.CourseRepository;
 import org.project.server.repository.TaskRepository;
 import org.project.server.repository.UserRepository;
 import org.springframework.context.ApplicationEventPublisher;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.server.ResponseStatusException;
 
 import java.time.LocalDate;
-import java.time.LocalDateTime;
 import java.util.List;
 
 @Service
@@ -33,7 +34,17 @@ public class CourseService {
     public Course createCourse(Course course, String username) {
         User user = userRepository.findByUsername(username).orElseThrow(() -> new RuntimeException("User not found"));
 
-        if(user.getRole() == UserRole.ADMIN) {
+        if (!course.getName().matches("[A-Za-z0-9]+")) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST ,"Course name may contain only letters and numbers.");
+        }
+
+        if(courseRepository.existsByUserIsNullAndName(course.getName())) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST ,"Course already exists");
+        } else if(courseRepository.existsByUserAndName(user, course.getName())) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST ,"You already have course with this name");
+        }
+
+        if(user.getRole() == UserRole.ADMIN ||  user.getRole() == UserRole.TEACHER) {
             course.setUser(null);
         } else {
             course.setUser(user);
@@ -51,7 +62,7 @@ public class CourseService {
 
     public Course getById(Long id) {
         return courseRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Course not found"));
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.BAD_REQUEST, "Course not found"));
     }
 
     public List<Course> getMyCourses(String username) {

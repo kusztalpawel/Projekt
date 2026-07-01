@@ -8,7 +8,7 @@ export const fetchAchievements = async (token) => {
     });
 
     if(!res.ok) {
-        throw new Error("Failed to fetch user achievements");
+        throw new Error(await res.text());
     }
 
     return await res.json();
@@ -22,7 +22,7 @@ export const fetchAllAchievements = async (token) => {
     });
 
     if(!res.ok) {
-        throw new Error("Failed to fetch all achievements");
+        throw new Error(await res.text());
     }
 
     return await res.json();

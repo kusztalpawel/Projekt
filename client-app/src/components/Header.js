@@ -1,16 +1,20 @@
 import { useState } from "react";
 import { Link } from "react-router-dom";
 import useCourses from "../hooks/useCourses";
+import { useNavigate } from "react-router-dom";
+import { toast } from "react-toastify";
 import "./Header.css"
 
-export default function Header({ user, setUser, points, setActiveView, selectedCourse, setSelectedCourse }) {
+export default function Header({ user, setUser, points, setActiveView, selectedCourse, setSelectedCourse}) {
     const isLoggedIn = !!user?.token;
     const isAdmin = user?.role === "ADMIN";
+    const isTeacher = user?.role === "TEACHER";
     
     const [showCourses, setShowCourses] = useState(false);
     const [showCourseModal, setShowCourseModal] = useState(false);
     const [newCourseName, setNewCourseName] = useState("");
     const { courses, templates, addCourse, loadCourses, loadTemplates, enrollCourse } = useCourses(user?.token);
+    const alphaNumericRegex = /^[A-Za-z0-9]+$/;
 
     const handleLogout = () => {
         setUser(null);
@@ -19,12 +23,21 @@ export default function Header({ user, setUser, points, setActiveView, selectedC
     };
 
     const onCreateCourseButtonClick = async () => {
-        if (!newCourseName.trim()) return;
+        if (!newCourseName.trim()) {
+            toast.error("Nazwa kursu nie może być pusta!");
+            return;
+        }
+
+        if (!alphaNumericRegex.test(newCourseName)) {
+            toast.error("Nazwa kursu powinna zawierać tylko litery lub cyfry.");
+            return;
+        }
 
         try {
             await addCourse(newCourseName);
             setNewCourseName("");
             setShowCourseModal(false);
+            toast.success("Dodano kurs");
         } catch (err) {
             console.error(err);
         }
@@ -44,14 +57,21 @@ export default function Header({ user, setUser, points, setActiveView, selectedC
         }
     }
 
+    const navigate = useNavigate();
+
     return (
         <>
-            <header>
+            <header className="header-class">
                 <div className="logo">LearningApp</div>
 
                 <div className="nav">
                     {isLoggedIn ? (
                         <>
+                            <div>
+                                <button className="achievements-button" onClick={() => setActiveView("exams")}>
+                                    Egzaminy
+                                </button>
+                            </div>
                             <div>
                                 <button className="achievements-button" onClick={() => setActiveView("achievements")}>
                                     Osiągnięcia
@@ -60,6 +80,9 @@ export default function Header({ user, setUser, points, setActiveView, selectedC
                             <div>
                                 {isAdmin && (
                                     <Link className="header-link" to="/admin">ADMIN PANEL</Link>
+                                )}
+                                {isTeacher && (
+                                    <button className="achievements-button" onClick={() => navigate("/teacher")}>PANEL NAUCZYCIELA</button>
                                 )}
                             </div>
                             <div className="courses-dropdown"

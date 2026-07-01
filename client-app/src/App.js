@@ -1,10 +1,12 @@
 import { Routes, Route } from "react-router";
-import './App.css';
+import { ToastContainer } from "react-toastify";
+import { useState, useEffect } from "react";
 import Home from "./Home";
 import Login from "./Login";
 import Register from './Register';
 import Admin from './Admin';
-import { useState, useEffect } from "react";
+import TeacherPanel from "./TeacherPanel";
+import './App.css';
 
 function App() {
 
@@ -22,12 +24,17 @@ function App() {
   }, []);
 
   return (
-    <Routes>
-      <Route path="/" element={<Home user={user} setUser={setUser} />} />
-      <Route path="/login" element={<Login setUser={setUser} />} />
-      <Route path="/register" element={<Register />} />
-      <Route path="/admin" element={<Admin user={user}/>} />
-    </Routes>
+    <>
+      <Routes>
+        <Route path="/" element={<Home user={user} setUser={setUser} />} />
+        <Route path="/login" element={<Login setUser={setUser} />} />
+        <Route path="/register" element={<Register />} />
+        <Route path="/admin" element={<Admin user={user}/>} />
+        <Route path="/teacher" element={<TeacherPanel user={user}/>} />
+      </Routes>
+      <ToastContainer position="top-right" autoClose={3000} hideProgressBar={false} closeOnClick pauseOnHover theme="light"/>
+    </>
+    
   );
 }
 

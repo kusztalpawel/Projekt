@@ -3,9 +3,6 @@ package org.project.server.mapper;
 import org.project.server.dto.SkinDTO;
 import org.project.server.model.Skin;
 
-import java.util.ArrayList;
-import java.util.List;
-
 public class SkinMapper {
     private SkinMapper() {
     }

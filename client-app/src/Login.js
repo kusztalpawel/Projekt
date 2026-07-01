@@ -1,18 +1,31 @@
 import React, { useState } from "react";
 import { Link, useNavigate } from "react-router";
-import "./Login.css";
+import { toast } from "react-toastify";
 import { fetchUserLogin } from "./api/usersApi";
 import { jwtDecode } from "jwt-decode";
+import "./Login.css";
 
 const Login = ({ setUser }) => {
     const [username, setUsername] = useState("");
     const [password, setPassword] = useState("");
     const [rememberMe, setRememberMe] = useState(false);
 
+    const alphaNumericRegex = /^[A-Za-z0-9]+$/;
+
     const navigate = useNavigate();
 
     const handleSubmit = async (e) => {
         e.preventDefault();
+
+        if (!alphaNumericRegex.test(username)) {
+            toast.error("Nazwa użytkownika powinna zawierać tylko litery lub cyfry.");
+            return;
+        }
+
+        if (!alphaNumericRegex.test(password)) {
+            toast.error("Hasło powinno zawierać tylko litery lub cyfry.");
+            return;
+        }
 
         try {
             const data = await fetchUserLogin(username, password);
@@ -26,7 +39,8 @@ const Login = ({ setUser }) => {
                 friends: data.friends,
                 character: data.character,
                 role: decoded.role,
-                skin: data.skinUrl
+                skin: data.skinUrl,
+                coins: data.powerCoins
             };
 
             setUser(userData);
@@ -40,7 +54,7 @@ const Login = ({ setUser }) => {
             }
             navigate("/");
         } catch (err) {
-            console.error("Login error:", err);
+            toast.error(err.message);
         }
     };
 

@@ -16,6 +16,12 @@ public class TaskMapper {
     }
 
     public static TaskResponseDTO toDTO(Task task) {
-        return new TaskResponseDTO(task.getId(), task.getName(), task.getTime(), task.getPoints(), task.getCourse().getId(), task.getDone());
+        return new TaskResponseDTO(
+                task.getId(),
+                task.getName(),
+                task.getTime(),
+                task.getPoints(),
+                task.getCourse().getId(),
+                task.getDone());
     }
 }

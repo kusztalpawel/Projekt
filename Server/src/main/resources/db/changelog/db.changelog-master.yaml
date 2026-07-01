@@ -47,3 +47,15 @@ databaseChangeLog:
       file: db/changelog/changes/023-change_skins_column_in_users.sql
   - include:
       file: db/changelog/changes/024-change_skins_column_in_users.sql
+  - include:
+      file: db/changelog/changes/025-exam-tables-changes.sql
+  - include:
+      file: db/changelog/changes/026-exam_result_table_added.sql
+  - include:
+      file: db/changelog/changes/027-edit_exam_table.sql
+  - include:
+      file: db/changelog/changes/028-add_coins_column_to_users.sql
+  - include:
+      file: db/changelog/changes/029-add_constraint_user_powers.sql
+  - include:
+      file: db/changelog/changes/030-add_last_fight_column_to_user_friends.sql

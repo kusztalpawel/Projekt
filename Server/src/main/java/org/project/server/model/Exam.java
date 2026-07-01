@@ -2,34 +2,28 @@ package org.project.server.model;
 
 import jakarta.persistence.*;
 
-import java.time.LocalDate;
-
 @Entity
 @Table(name = "exams")
 public class Exam {
-
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    @Column(nullable = false)
     private String name;
 
-    private LocalDate type;
+    @Column(length = 6, nullable = false, unique = true)
+    private String code;
 
-    private Integer points;
+    @Column(nullable = false)
+    private Integer timeLimit;
 
-    private Float grade;
-
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "user_id", nullable = false)
-    private User user;
+    @ManyToOne
+    @JoinColumn(name = "created_by")
+    private User createdBy;
 
     public Long getId() {
         return id;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
     }
 
     public String getName() {
@@ -40,35 +34,27 @@ public class Exam {
         this.name = name;
     }
 
-    public LocalDate getType() {
-        return type;
+    public String getCode() {
+        return code;
     }
 
-    public void setType(LocalDate type) {
-        this.type = type;
+    public void setCode(String code) {
+        this.code = code;
     }
 
-    public Integer getPoints() {
-        return points;
+    public Integer getTimeLimit() {
+        return timeLimit;
     }
 
-    public void setPoints(Integer points) {
-        this.points = points;
+    public void setTimeLimit(Integer timeLimit) {
+        this.timeLimit = timeLimit;
     }
 
-    public Float getGrade() {
-        return grade;
+    public User getCreatedBy() {
+        return createdBy;
     }
 
-    public void setGrade(Float grade) {
-        this.grade = grade;
-    }
-
-    public User getUser() {
-        return user;
-    }
-
-    public void setUser(User user) {
-        this.user = user;
+    public void setCreatedBy(User createdBy) {
+        this.createdBy = createdBy;
     }
 }

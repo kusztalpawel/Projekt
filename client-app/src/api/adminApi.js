@@ -8,7 +8,7 @@ export const fetchAchievementMetrics = async (token) => {
     });
 
     if(!res.ok) {
-        throw new Error("Failed to fetch metrics");
+        throw new Error(await res.text());
     }
 
     return await res.json();
@@ -31,8 +31,36 @@ export const createAchievement = async (token, achievement) => {
     });
 
     if (!res.ok) {
-        throw new Error("Failed to create achievement");
+        throw new Error(await res.text());
     }
 
     return await res.json();
 } 
+
+export const getMyExams = async (token) => {
+    const res = await fetch(`${API_URL}/exams/created`, {
+        headers: {
+            Authorization: `Bearer ${token}`
+        }
+    });
+
+    if (!res.ok) {
+        throw new Error(await res.text());
+    }
+
+    return await res.json();
+};
+
+export const getExamResults = async (token, examId) => {
+    const res = await fetch(`${API_URL}/exams/${examId}/results`, {
+        headers: {
+            Authorization: `Bearer ${token}`
+        }
+    });
+
+    if (!res.ok) {
+        throw new Error(await res.text());
+    }
+
+    return await res.json();
+};

@@ -24,14 +24,14 @@ export default function useTasks(token, selectedCourse, setSelectedCourse, setPo
         load();
     }, [selectedCourse, token]);
 
-    const addTask = async (token, task) => {
+    const addTask = async (token, taskName, taskExp) => {
         if (!selectedCourse) return;
 
         const newTask = await createTask(
             token,
             selectedCourse.id,
-            task,
-            50
+            taskName,
+            taskExp
         );
 
         setTasks(prev => [...prev, newTask]);

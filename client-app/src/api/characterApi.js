@@ -9,7 +9,7 @@ export const addStatPoint = async(token, stat) => {
     });
 
     if (!res.ok) {
-        throw new Error("Upgrade failed", res.text);
+        throw new Error(await res.text());
     }
 
     return await res.json();
@@ -25,7 +25,7 @@ export const fightFriend = async (token, friendUsername) => {
     });
 
     if(!res.ok){
-        throw new Error("Cannot fight");
+        throw new Error(await res.text());
     }
 
     return await res.json();

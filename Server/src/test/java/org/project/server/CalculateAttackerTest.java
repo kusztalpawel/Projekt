@@ -24,10 +24,8 @@ class CalculateAttackerTest {
         for(int i = 0; i < 7; i++){
             Boolean res = characterService.calculateAttacker(3,firstAttacker,2,secondAttacker);
             if(res){
-                System.out.println("FIRST");
                 firstAttacker++;
             } else {
-                System.out.println("SECOND");
                 secondAttacker++;
             }
 

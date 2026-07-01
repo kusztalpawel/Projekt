@@ -1,5 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { fetchAchievements, fetchAllAchievements } from "../api/achievementsApi";
+import { FaTrophy } from "react-icons/fa6";
+
 import "./Achievements.css";
 
 const Achievements = ({user, setUser, setActiveView}) => {
@@ -51,6 +53,7 @@ const Achievements = ({user, setUser, setActiveView}) => {
             <div className="achievements-list">
                 {user.achievements.map(achievement => (
                     <div key={achievement.name} className="achievement-item">
+                        <FaTrophy size={"1.3em"}/>
                         <div>
                             <div className="achievement-name">
                                 {achievement.name}

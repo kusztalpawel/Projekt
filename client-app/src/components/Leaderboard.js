@@ -40,7 +40,7 @@ const Leaderboard = ({ user, setActiveView }) => {
                             {player.username}
                         </div>
                         <div className="leaderboard-score">
-                            {player.wins}W / {player.loses}L | {(player.wins/(player.wins + player.loses))*100}% wygranych
+                            {player.wins}W / {player.loses}L | {Math.round((player.wins/Math.max(1, (player.wins + player.loses)))*100)}% wygranych
                         </div>
                     </div>
                 ))}

@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import { Link, useNavigate } from "react-router";
+import { toast } from "react-toastify";
 import "./Login.css";
 
 const Register = () => {
@@ -10,9 +11,20 @@ const Register = () => {
     const navigate = useNavigate();
 
     const API_URL = "http://localhost:8080";
+    const alphaNumericRegex = /^[A-Za-z0-9]+$/;
 
     const handleSubmit = async (e) => {
         e.preventDefault();
+
+        if (!alphaNumericRegex.test(username)) {
+            toast.error("Nazwa użytkownika powinna zawierać tylko litery lub cyfry.");
+            return;
+        }
+        
+        if (!alphaNumericRegex.test(password)) {
+            toast.error("Hasło powinno zawierać tylko litery lub cyfry.");
+            return;
+        }
 
         if (password !== confirmPassword) {
             alert("Passwords do not match");
@@ -31,9 +43,10 @@ const Register = () => {
             const data = await res.json();
 
             if (!res.ok) {
-                throw new Error(data.message || "Register failed");
+                throw new Error(await res.text());
             }
 
+            toast.success("Zarejestrowano użytkownika");
             navigate("/");
         } catch (err) {
             console.error("Register error:", err);

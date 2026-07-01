@@ -9,7 +9,9 @@ import org.project.server.model.UserAchievement;
 import org.project.server.repository.AchievementRepository;
 import org.project.server.repository.UserAchievementRepository;
 import org.project.server.repository.UserRepository;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
+import org.springframework.web.server.ResponseStatusException;
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -27,6 +29,10 @@ public class AchievementService {
     }
 
     public Achievement createAchievement(Achievement achievement) {
+        if(achievementRepository.existsByCode(achievement.getCode())) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST,"Achievement with this code already exists");
+        }
+
         return achievementRepository.save(achievement);
     }
 
